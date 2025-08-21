@@ -123,7 +123,7 @@ const portfolio_data_arr: PortfolioData[] = [
         image_url_arr: [adidas_a, adidas_b, adidas_c],
         texture_arr: [],
         title: '8th wall AR projects',
-        pages: ['AR experiences for for example for the Soccer World Championship 2024. Users use AR on their phones to the see their legends come to life! I have also helped making marketing applications for Sony as shown in the video blow.'],
+        pages: ['AR experiences, for example, the Soccer World Championship 2024 Giants campaign. Users use AR on their phones to the see their legends come to life! Additionaly toblerone AR tiny messages web application and I have alsohelped making marketing applications for Sony as shown in the video blow.'],
         links: [{
             url: 'https://www.8thwall.com/moyosamedia/adidas-giants',
             text: '> Link to 8thwall <'
