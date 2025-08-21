@@ -425,7 +425,7 @@ class PortfolioItemMenu implements ITickable {
         }
         this.on_portfolio_data_changed.fire(data)
 
-        window.location.hash = data.name
+        history.replaceState({}, '', `#${data.name}`);
     }
 
     refresh_data() {
