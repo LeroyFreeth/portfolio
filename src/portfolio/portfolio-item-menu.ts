@@ -115,8 +115,6 @@ class PortfolioItemMenu implements ITickable {
                     texture_loader.load(image_url, (texture) => {
                         load_helper.loadedDependency(image_url)
                         data.texture_arr[j] = texture
-
-
                     })
                 }
             }
