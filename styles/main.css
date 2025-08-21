@@ -1,0 +1,392 @@
+@import url("fontawesome-all.min.css");
+
+:root {
+    --left-width: 5%;
+    /* This will be overwritten by width media queries */
+    --portfolio-item-columns: auto auto auto auto;
+    --speed: 1.0;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    min-height: 100%;
+    min-width: 100%;
+
+    margin: 0px;
+    padding: 0px;
+    width: 100%;
+
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+
+}
+
+ul>li {
+    display: inline-block;
+}
+
+/* Specific elements */
+
+#top-portfolio-info {
+    position: absolute;
+    top: 2%;
+    right: 0%;
+    width: 30%;
+    max-height: 0;
+    transition: max-height calc((1.0 / var(--speed)) * 1.0s) ease-in-out;
+}
+
+#portfolio-controls {
+    margin: 0 1em 0 1em;
+    position: fixed;
+    z-index: 100;
+
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    left: var(--left-width);
+}
+
+#footer {
+    height: 10em;
+}
+
+#portfolio-item-content-container {
+    margin: 0 20% 0 10%;
+}
+
+/* States and animations */
+.disabled {
+    opacity: .3;
+    pointer-events: none;
+    cursor: not-allowed;
+    transition: all 1s;
+}
+
+.pointer-none {
+    pointer-events: none;
+    user-select: none;
+    cursor: auto;
+}
+
+.pointer-auto {
+    pointer-events: auto;
+    user-select: auto;
+    cursor: pointer;
+}
+
+.fader {
+    opacity: 1;
+    transition: opacity calc((1.0 /var(--speed)) * 0.5s) ease-out;
+    pointer-events: auto;
+}
+
+.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.mover {
+    transform: translate(0, 0);
+    transition: transform calc((1.0 / var(--speed)) * 1.0s) ease-out;
+}
+
+.move-up {
+    transform: translate(0, -150%)
+}
+
+/* .circular {
+    -moz-transition: all calc((1.0 /var(--speed)) * 0.2s) ease-out;
+    -webkit-transition: all calc((1.0 /var(--speed)) * 0.2s) ease-out;
+    -ms-transition: all calc((1.0 /var(--speed)) * 0.2s) ease-out;
+    transition: all calc((1.0 /var(--speed)) * 0.2s)s ease-out;
+} */
+
+.title {
+    background-color: rgb(0, 0, 0, 0.5);
+    /*positioned relative to parent div (container) */
+    position: absolute;
+    /* bottom margin is 0 so that it
+coincides with container's bottom margin*/
+    bottom: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    color: white;
+    width: 50%;
+    font-size: 25px;
+    padding: 15px 0;
+    text-align: center;
+    /*invisible because opacity is 0*/
+    opacity: 0.4;
+    transition: calc((1.0 / var(--speed)) * 0.2s);
+    pointer-events: none;
+}
+
+#video-preview:hover .title {
+    /*becomes visible on hover*/
+    opacity: 1;
+}
+
+/* General */
+canvas {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+html {
+    scroll-behavior: smooth;
+    box-sizing: border-box;
+}
+
+button {
+    margin: 1em;
+    padding: 1em;
+}
+
+.header {
+    position: fixed;
+
+}
+
+.left {
+    margin-left: 0;
+    width: var(--left-width);
+    min-width: 2em;
+}
+
+.left ul {
+    padding-inline-start: 0;
+    list-style-type: none;
+}
+
+.right {
+    margin-left: var(--left-width);
+    width: calc(100% - var(--left-width));
+}
+
+.flex {
+    display: flex;
+    max-height: auto;
+}
+
+.collapsible {
+    max-height: auto;
+    height: 100vh;
+    overflow: hidden;
+    transition: max-height calc((1.0 / var(--speed)) * 1.0s) ease-in-out;
+}
+
+.bottom {
+    display: inline-block;
+    align-self: flex-end;
+    width: 100%;
+}
+
+.container {
+    position: relative;
+}
+
+/* Grid, columns and rows */
+.grid {
+    display: grid;
+    grid-template-columns: var(--portfolio-item-columns);
+}
+
+.columns-4 {
+    display: grid;
+    grid-template-rows: auto auto auto auto;
+}
+
+/* Portfolio items */
+.portfolio-item {
+    padding: 1em;
+    display: block;
+}
+
+.portfolio-item:hover:after {
+    opacity: 0.6;
+    transition: opacity 0.5s;
+}
+
+.rect-img-wrapper {
+    position: relative;
+}
+
+.rect-img-wrapper::after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+
+.rect-img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.padded-bottom {
+    padding-bottom: 2em;
+}
+
+.padded-right {
+    padding-right: 2em;
+}
+
+.center {
+    max-width: fit-content;
+    margin-inline: auto;
+}
+
+.auto-size {
+    width: 100%;
+    height: auto;
+}
+
+.aspect-ratio {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    /* The height of the item will now be 56.25% of the width. */
+}
+
+.aspect-ratio iframe {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+.aspect-ratio img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+}
+
+iframe {
+    border-width: 0;
+}
+
+
+.icon {
+    text-decoration: none;
+    border-bottom: none;
+    position: relative;
+    margin: auto;
+
+}
+
+.icon:before {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    line-height: 1;
+    text-transform: none !important;
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 400;
+}
+
+.icon>.label {
+    display: none;
+}
+
+.icon:before {
+    line-height: inherit;
+}
+
+.icon.solid:before {
+    font-weight: 900;
+}
+
+.icon.brands:before {
+    font-family: 'Font Awesome 5 Brands';
+}
+
+/* Media query sizing */
+
+@media screen and (max-width: 1800px) {
+    .grid {
+        grid-template-columns: auto auto auto auto auto;
+    }
+
+    .icon {
+        font-size: 40px;
+    }
+
+ 
+
+   
+}
+
+@media screen and (max-width: 1280px) {
+    .grid {
+        grid-template-columns: auto auto auto auto;
+    }
+
+    #portfolio-controls {
+        top: 0;
+        bottom: auto;
+        width: calc(100% - var(--left-width) - 30%);
+    }
+
+    #top-portfolio-info {
+        position: absolute;
+        top: 2%;
+        right: 0%;
+        width: 30%;
+    }
+
+}
+
+@media screen and (max-width: 980px) {
+    .grid {
+        grid-template-columns: auto auto auto;
+    }
+
+    .icon {
+        font-size: 20px;
+    }
+
+    #portfolio-controls {
+        bottom: 0%;
+        top: auto;
+        width: calc(100% - (2 * var(--left-width)));
+    }
+
+    #top-portfolio-info {
+        position: relative;
+        bottom: 0%;
+        left: 0%;
+        top: auto;
+        width: 100%;
+    }
+
+}
+
+@media screen and (max-width: 736px) {
+    .grid {
+        grid-template-columns: auto auto;
+    }
+
+   
+
+}
+
+@media screen and (max-width: 480px) {
+    .grid {
+        grid-template-columns: auto;
+    }
+
+}

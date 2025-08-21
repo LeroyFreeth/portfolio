@@ -1,0 +1,276 @@
+:root {
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    --color-a-hex: #84828F;
+    --color-b-hex: #6A687A;
+    --color-c-hex: #536271;
+    --color-d-hex: #3E4C5E;
+    --color-e-hex: #2C3D55;
+}
+
+body {
+    font: normal normal 16px/1.4 Georgia;
+    font-family: monospace;
+    -webkit-text-size-adjust: none;
+    color: #FFFFFF
+}
+
+#header {
+    background-color: var(--color-d-hex);
+    height: 100%;
+    padding: 0;
+    align-content: center;
+}
+
+.vertical {
+    -webkit-transform: translateX(-50%) rotate(180deg);
+    -moz-transform: translateX(-50%) rotate(180deg);
+    -o-transform: translateX(-50%) rotate(180deg);
+    -ms-transform: translateX(-50%) rotate(180deg);
+    transform: translateX(-50%) rotate(180deg);
+    white-space: nowrap;
+    writing-mode: vertical-lr;
+    padding: 1em 0;
+    text-overflow: ellipsis;
+    line-height: 1px;
+}
+
+.circular {
+    border-radius: 100%;
+    outline-width: 0.2em;
+    outline-color: var(--color-b-hex);
+    outline-style: solid;
+}
+
+.circular:hover {
+    outline-width: 0.5em;
+    outline-color: var(--color-a-hex);
+    outline-style: solid;
+}
+
+input,
+textarea {
+    margin: 2em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    padding: 1em 1em 1em 1em;
+    margin: 1em 0 1em 0;
+    color: #FFFFFF
+}
+
+section {
+    /* margin: 3em 0 3em 0; */
+    padding: 1em 0 1em;
+}
+
+a {
+    -moz-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    -webkit-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    -ms-transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    /* border-bottom: dotted 1px; */
+    color: var(--color-a-hex);
+    font-weight: bold;
+
+
+}
+
+li a {
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+a:hover {
+    /* border-bottom-color: transparent; */
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+/* a:visited {
+    text-decoration: none;
+    color: var(--color-a-hex);
+} */
+
+strong,
+b {
+    color: var(--color-c-hex);
+    font-weight: 400;
+}
+
+em,
+i {
+    font-style: italic;
+}
+
+h1 a,
+h2 a,
+h3 a,
+h4 a,
+h5 a,
+h6 a {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+h1 {
+    padding: 0.5em 0 0.5em 1.5em;
+    font-size: 2em;
+    line-height: 1.5em;
+}
+
+h2 {
+    font-size: 1.5em;
+    line-height: 1.5em;
+}
+
+h3 {
+    font-size: 1.25em;
+    line-height: 1.5em;
+}
+
+h4 {
+    font-size: 1.1em;
+    line-height: 1.5em;
+}
+
+h5 {
+    font-size: 0.9em;
+    line-height: 1.5em;
+}
+
+h6 {
+    font-size: 0.7em;
+    line-height: 1.5em;
+}
+
+sub {
+    font-size: 0.8em;
+    position: relative;
+    top: 0.5em;
+}
+
+sup {
+    font-size: 0.8em;
+    position: relative;
+    top: -0.5em;
+}
+
+hr {
+    border: 0;
+    /* border-bottom: solid 2px #efefef; */
+    margin: 2em 0;
+}
+
+hr.major {
+    margin: 3em 0;
+}
+
+blockquote {
+    /* border-left: solid 6px #efefef; */
+    font-style: italic;
+    margin: 1em;
+}
+
+code {
+    background: #f7f7f7;
+    /* border-radius: 0.35em; */
+    /* border: solid 2px #efefef; */
+    font-family: "Courier New", monospace;
+    font-size: 0.9em;
+    margin: 0 0.25em;
+    padding: 0.25em 0.65em;
+}
+
+pre {
+    -webkit-overflow-scrolling: touch;
+    font-family: "Courier New", monospace;
+    font-size: 0.9em;
+    margin: 0 0 2em 0;
+}
+
+pre code {
+    display: block;
+    line-height: 1.75em;
+    padding: 1em 1.5em;
+    overflow-x: auto;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-right {
+    text-align: right;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+
+mark {
+    background-color: transparent;
+    color: inherit;
+}
+
+input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+input,
+select,
+textarea {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+
+}

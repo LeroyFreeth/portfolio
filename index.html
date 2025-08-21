@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="freeth-portfolio.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio - Leroy Freeth</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/style.css" />
+</head>
+
+<body ondragstart="return false;" ondrop="return false;">
+
+  <div id="home"></div>
+  <canvas id="app" class="three-js-ui"></canvas>
+
+  <div id="header" class="header left">
+    <nav id="nav">
+      <ul class="columns-4" style="position: absolute; top:0; left: 0; right: 0;">
+        <li class="vertical"><a id="home-button" href="#home">Home</a></li>
+        <li class="vertical"><a href="#portfolio">Portfolio</a></li>
+        <li class="vertical"><a href="#about">About</a></li>
+      </ul>
+    </nav>
+
+    <div class="center columns-4" style="position: absolute; bottom:0; left: 0; right: 0;">
+      <a href="https://github.com/LeroyFreeth" class="icon brands fa-github padded-bottom"><span
+          class="label">Github</span></a>
+      <a href="mailto:ldfreeth@hotmail.com" class="icon solid fa-envelope padded-bottom"><span
+          class="label">Email</span></a>
+    </div>
+  </div>
+
+  <section id="portfolio-controls" class="fader fade-out">
+    <button id="prev-texture-button" type="button">← Previous Image</button>
+    <button id="next-texture-button" type="button">→ Next Image</button>
+    <button id="return-to-portfolio-button" type="button">↑ Close</button>
+
+    <button id="prev-item-button" type="button">← Previous Project</button>
+    <button id="next-item-button" type="button">→ Next Project</button>
+  </section>
+
+  <div class="container right">
+    <section id="top-portfolio-info" class="three-js-ui fader fade-out mover move-up">
+      <header>
+        <h2>
+          <!-- Portfolio title will be inserted here at runtime-->
+          title
+        </h2>
+      </header>
+      <p>
+        <!-- Portfolio info will be inserted here at runtime-->
+        info
+      </p>
+
+      <p>
+        <!-- Portfolio info will be inserted here at runtime-->
+        more info
+      </p>
+
+      <ul class="links">
+        <!-- Portfolio links will be inserted here at runtime-->
+      </ul>
+
+      <div id="video-preview" class="aspect-ratio hovereffect">
+
+        <img class="pointer-auto title-holder" style='object-fit: contain;' src='' />
+        <div class="title">Play</div>
+      </div>
+      <div id="video-player" class="aspect-ratio">
+        <iframe class="aspect-ratio" allow="fullscreen" loading="lazy" width="420" height="315" src=""></iframe>
+      </div>
+
+      <ul class="tags horizontal">
+        <!-- Portfolio tags will be inserted here at runtime-->
+      </ul>
+
+
+      </iframe>
+    </section>
+
+    <section id="portfolio" class="bottom pointer-none">
+      <div id="portfolio-item-content-container" class="container grid">
+        <!-- Portfolio items will be inserted here at runtime-->
+      </div>
+    </section>
+    <section id="portfolio-collapser" class="flex collapsible pointer-none"></section>
+
+    <section id="about" class="three-js-ui">
+      <div style="width: 60%">
+        <header>
+          <h2>Portfolio - Leroy Freeth</h2>
+        </header>
+
+        <p>Hello there! I'm a Game/Software developer with nearly 5 years of experience creating games and
+          (web)applications. During my career I've worked with Unreal, Unity, BabylonJs and a little Godot. This comes
+          with their associated coding languages, such as C++/Blueprints, C#, Js & Ts and GdScript.
+        </p>
+      </div>
+    </section>
+
+    <footer id="footer" class="flex">
+      <div class="inner bottom">
+        <ul class="copyright ">
+          <li>&copy; Leroy Freeth</li>
+        </ul>
+      </div>
+    </footer>
+  </div>
+  <script type="module" src="./src/main.ts"></script>
+</body>
+
+</html>
