@@ -285,7 +285,7 @@ iframe {
     border-bottom: none;
     position: relative;
     margin: auto;
-
+    font-size: 60px;
 }
 
 .icon:before {
@@ -325,18 +325,17 @@ iframe {
     }
 
     .icon {
-        font-size: 40px;
+        font-size: 50;
     }
-
-    
-
-
-
 }
 
 @media screen and (max-width: 1280px) {
     .grid {
         grid-template-columns: auto auto auto auto;
+    }
+
+    .icon {
+        font-size: 40px;
     }
 
     #portfolio-controls {
@@ -364,7 +363,7 @@ iframe {
     }
 
     .icon {
-        font-size: 20px;
+        font-size: 30px;
     }
 
     #portfolio-controls {
@@ -391,6 +390,9 @@ iframe {
         grid-template-columns: auto auto;
     }
 
+    .icon {
+        font-size: 20px;
+    }
 
 
 }
@@ -400,4 +402,7 @@ iframe {
         grid-template-columns: auto;
     }
 
+    .icon {
+        font-size: 10px;
+    }
 }
