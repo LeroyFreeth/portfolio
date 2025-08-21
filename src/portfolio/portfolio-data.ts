@@ -56,7 +56,7 @@ type VideoLinkData = {
 
 const portfolio_data_arr: PortfolioData[] = [
     {
-        name: 'mauritshuis',
+        name: 'lootvr',
         image_url_arr: [loot_vr_a, loot_vr_b, loot_vr_c, loot_vr_d, loot_vr_e],
         texture_arr: [],
         title: 'Loot VR',
@@ -75,7 +75,7 @@ const portfolio_data_arr: PortfolioData[] = [
         color_palette: [0xC696BC, 0x8B5D89, 0x5A4262, 0x1A213E, 0x7A527C]
     },
     {
-        name: 'moyosa_spaces',
+        name: 'moyosa-spaces',
         image_url_arr: [moyosa_spaces_a, moyosa_spaces_b, moyosa_spaces_c, moyosa_spaces_d],
         texture_arr: [],
         title: 'Moyosa spaces',
@@ -98,7 +98,7 @@ const portfolio_data_arr: PortfolioData[] = [
         color_palette: [0xA9B4C2, 0x5E6572, 0xEEF1EF, 0x1C2321, 0x7D98A1]
     },
     {
-        name: 'm_n_m_s',
+        name: 'm&m-color-match',
         image_url_arr: [m_n_m_s_a, m_n_m_s_b, m_n_m_s_c],
         texture_arr: [],
         title: 'M&M Color Match',
@@ -119,7 +119,7 @@ const portfolio_data_arr: PortfolioData[] = [
             ColorPaletteManager.desaturate(0x8CCCFB, 0.3)]
     },
     {
-        name: '8th wall ar',
+        name: '8th-wall-ar',
         image_url_arr: [adidas_a, adidas_b, adidas_c],
         texture_arr: [],
         title: '8th wall AR projects',
@@ -137,7 +137,7 @@ const portfolio_data_arr: PortfolioData[] = [
         color_palette: [0x09070F, 0x5E293A, 0xBDB7A5, 0x672E21, 0x0F0F16]
     },
     {
-        name: 'brighter_future',
+        name: 'brighter-future',
         image_url_arr: [brighter_future_a, brighter_future_b],
         texture_arr: [],
         title: 'Brighter Future',
@@ -155,7 +155,7 @@ const portfolio_data_arr: PortfolioData[] = [
         color_palette: [0x302E2F, 0x897A6A, 0x3C3F2D, 0x676360, 0xC0C7C4]
     },
     {
-        name: 'hornn_stein',
+        name: 'hornn-stein',
         image_url_arr: [hornsteinn_a, hornsteinn_b],
         texture_arr: [],
         title: 'Hornnstein',
@@ -173,7 +173,7 @@ const portfolio_data_arr: PortfolioData[] = [
         color_palette: [0x3B3E3E, 0xA7A29A, 0xF8F7F7, 0xDF4247, 0x3D748E]
     },
     {
-        name: 'gary_james_mcqueen',
+        name: 'gary-james-mcqueen',
         image_url_arr: [gary_james_mcqueen_a, gary_james_mcqueen_b, gary_james_mcqueen_c, gary_james_mcqueen_d],
         texture_arr: [],
         title: 'Gary James Mcqueen',

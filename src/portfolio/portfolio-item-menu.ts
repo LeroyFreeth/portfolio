@@ -100,14 +100,23 @@ class PortfolioItemMenu implements ITickable {
                 const load_helper = new LoadDependencyHelper(data.image_url_arr, () => {
                     portfolio_item_element.classList.remove(disabled_class)
                     portfolio_load_helper.loadedDependency()
+
+                    const data_id = window.location.hash.replace('#', '')
+                    const data = portfolio_data_arr[i]
+                    if (data.name === data_id) {
+                        this.set_portfolio_data_for_index(i, true)
+                        this.open_portfolio(true)
+                    }
                 })
 
                 const texture_loader = new THREE.TextureLoader()
-                for (let i = 0; i < l; i++) {
-                    const image_url = data.image_url_arr[i]
+                for (let j = 0; j < l; j++) {
+                    const image_url = data.image_url_arr[j]
                     texture_loader.load(image_url, (texture) => {
                         load_helper.loadedDependency(image_url)
-                        data.texture_arr[i] = texture
+                        data.texture_arr[j] = texture
+
+
                     })
                 }
             }
@@ -419,6 +428,8 @@ class PortfolioItemMenu implements ITickable {
             }
         }
         this.on_portfolio_data_changed.fire(data)
+
+        window.location.hash = data.name
     }
 
     refresh_data() {
