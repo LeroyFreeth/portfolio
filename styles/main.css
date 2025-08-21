@@ -51,6 +51,10 @@ ul>li {
     left: var(--left-width);
 }
 
+#about-container {
+    width: 60%;
+}
+
 #footer {
     height: 10em;
 }
@@ -324,6 +328,7 @@ iframe {
         font-size: 40px;
     }
 
+    
 
 
 
@@ -345,6 +350,10 @@ iframe {
         top: 2%;
         right: 0%;
         width: 30%;
+    }
+
+    #about-container {
+        width: 60%;
     }
 
 }
@@ -372,6 +381,9 @@ iframe {
         width: 100%;
     }
 
+    #about-container {
+        width: calc(100% - (2 * var(--left-width)));
+    }
 }
 
 @media screen and (max-width: 736px) {
