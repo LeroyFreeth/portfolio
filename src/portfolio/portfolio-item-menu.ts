@@ -131,10 +131,13 @@ class PortfolioItemMenu implements ITickable {
 
         // Portfolio menu controls
         const return_to_portfolio_button = document.getElementById('return-to-portfolio-button')
-        return_to_portfolio_button?.addEventListener('click', () => {
+        return_to_portfolio_button?.addEventListener('click', (event) => {
             scrollTo(0, this._last_scroll_height)
             this.set_portfolio_data_for_index(-1, false)
             this.open_portfolio(false)
+
+            event.preventDefault()
+            window.location.hash = '#home'
         })
         const next_texture_for_item = document.getElementById('prev-texture-button')
         next_texture_for_item?.addEventListener('click', () => {
