@@ -180,7 +180,6 @@ class PortfolioItemMenu implements ITickable {
         this._timeline.integrate_track(track)
         this._timeline.bind_to_track(track.id, this._ui_mat.uniforms._progress, 'value')
         this._timeline_player = new TimelinePlayer(this._timeline, OUT_OF_BOUNDS_TYPE.HOLD)
-
     }
 
 
@@ -205,7 +204,7 @@ class PortfolioItemMenu implements ITickable {
 
             for (let i = 0; i < this._portfolio_item_arr.length; i++) {
                 const portfolio_item = this._portfolio_item_arr[i]
-                const image =  portfolio_item.querySelector('img')
+                const image = portfolio_item.querySelector('img')
                 image?.classList.remove(pointer_auto_class)
                 image?.classList.add(pointer_none_class)
                 if (i == index) {
@@ -239,7 +238,7 @@ class PortfolioItemMenu implements ITickable {
             const on_complete_cb = () => {
                 for (let i = 0; i < this._portfolio_item_arr.length; i++) {
                     const portfolio_item = this._portfolio_item_arr[i]
-                    const image =  portfolio_item.querySelector('img')
+                    const image = portfolio_item.querySelector('img')
                     image?.classList.remove(pointer_none_class)
                     image?.classList.add(pointer_auto_class)
                     portfolio_item.style.visibility = VISIBILITY.TRUE
@@ -260,8 +259,6 @@ class PortfolioItemMenu implements ITickable {
                 portfolio_controls.classList.remove(pointer_auto_class)
             }
             if (top_portfolio_info) {
-                // top_portfolio_info.classList.add(pointer_none_class)
-                // top_portfolio_info.classList.remove(pointer_auto_class)
                 top_portfolio_info.classList.add(move_right_class)
                 top_portfolio_info.classList.add(fade_out_class)
             }
@@ -363,7 +360,6 @@ class PortfolioItemMenu implements ITickable {
             for (let i = portfolio_list_elements.length; i < data.links.length; i++)
                 link_parent_element.appendChild(PortfolioItemMenu._create_portfolio_link_element())
 
-            //const window_features = 'location=yes,height=570,width=520,scrollbars=yes,status=yes'
             const tag_elements = link_parent_element.querySelectorAll('a')
             for (let i = 0; i < tag_elements.length; i++) {
                 const has_link = i < data.links.length
@@ -373,7 +369,6 @@ class PortfolioItemMenu implements ITickable {
                     link_element.innerText = data.links[i].text
                     link_element.href = data.links[i].url
                     link_element.target = '_blank'
-                   // link_element.onclick = () => { window.open(data.links[i].url, '_blank', window_features) }
                 } else {
                     link_element.innerText = ''
                     link_element.onclick = () => { }
@@ -498,7 +493,7 @@ class PortfolioItemMenu implements ITickable {
         const article_element = document.createElement('article')
         article_element.classList.add(portfolio_item_class)
         article_element.classList.add(fader_class)
-      
+
         const a_element = document.createElement('a')
         a_element.id = data.name
         a_element.classList.add(rect_image_wrapper_class)
