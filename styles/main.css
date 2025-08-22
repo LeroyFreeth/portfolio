@@ -66,7 +66,7 @@ ul>li {
 /* States and animations */
 .disabled {
     opacity: .3;
-    pointer-events: none;
+    pointer-events: none !important;
     transition: all 1s;
 }
 
