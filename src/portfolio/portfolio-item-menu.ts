@@ -78,7 +78,6 @@ class PortfolioItemMenu implements ITickable {
             this._portfolio_item_arr.push(portfolio_item_element)
 
             const image = portfolio_item_element.querySelector('img') as HTMLImageElement
-
             // Hover item
             image?.addEventListener('mouseover', () => {
                 this._texture_index = 0
@@ -100,14 +99,8 @@ class PortfolioItemMenu implements ITickable {
                 data.texture_arr = Array(l)
                 portfolio_item_element.classList.add(disabled_class)
                 const load_helper = new LoadDependencyHelper(data.image_url_arr, () => {
-                    portfolio_item_element.classList.remove(disabled_class)
                     portfolio_load_helper.loadedDependency()
-
-                    const data_id = window.location.hash.replace('#', '')
-                    const data = portfolio_data_arr[i]
-                    if (data.name === data_id) {
-                        this.set_portfolio_data_for_index(i, true)
-                    }
+                    image.classList.remove(disabled_class)
                 })
 
                 const texture_loader = new THREE.TextureLoader()
@@ -184,6 +177,16 @@ class PortfolioItemMenu implements ITickable {
         this._timeline_player = new TimelinePlayer(this._timeline, OUT_OF_BOUNDS_TYPE.HOLD)
     }
 
+    open_for_hash() {
+        for (let i = 0; i < portfolio_data_arr.length; i++) {
+            const data_id = window.location.hash.replace('#', '')
+            const data = portfolio_data_arr[i]
+            if (data.name === data_id) {
+                this.set_portfolio_data_for_index(i, true)
+                this.open_portfolio(true)
+            }
+        }
+    }
 
     open_portfolio(enable: boolean) {
         this._portfolio_open = enable

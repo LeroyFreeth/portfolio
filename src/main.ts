@@ -219,7 +219,7 @@ portfolio_timeline.bind_to_track(camera_rotate_y_track.id, camera.rotation, 'y')
 // Start level after loading is done
 const load_helper = new LoadDependencyHelper(['portfolio'], () => {
     // TODO: Some fixes on page loading. Still have to debug exactly what.
-    if (portfolio.has_data) portfolio.open_portfolio(true)
+    portfolio.open_for_hash()
 })
 
 // Setup raycaster
