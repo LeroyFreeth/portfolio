@@ -63,6 +63,8 @@ class PortfolioItemMenu implements ITickable {
     get timeline(): Timeline { return this._timeline }
     get timeline_player(): TimelinePlayer { return this._timeline_player }
 
+    get has_data(): boolean { return this._data_index >= 0 }
+
     constructor(uiMat: THREE.ShaderMaterial, clock: THREE.Clock, loaded_callback: () => void) {
         const portfolio_load_helper = new LoadDependencyHelper(portfolio_data_arr.length, () => {
             if (loaded_callback) loaded_callback()
@@ -105,7 +107,6 @@ class PortfolioItemMenu implements ITickable {
                     const data = portfolio_data_arr[i]
                     if (data.name === data_id) {
                         this.set_portfolio_data_for_index(i, true)
-                        this.open_portfolio(true)
                     }
                 })
 
