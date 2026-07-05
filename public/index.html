@@ -1,11 +1,22 @@
+
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Cube Engine</title></head>
-<body style="margin:0; background:#111;">
+<head>
+    <meta charset="UTF-8">
+    <title>Multiplatform Engine Context - WebGPU</title>
+    <style>
+        body { margin: 0; background: #111; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        canvas { background: #000; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+    </style>
+</head>
+<body>
+
+    <!-- WebGPU Viewport Canvas Surface Area -->
     <canvas id="gpuCanvas" width="800" height="600"></canvas>
-    
-    <!-- This single file contains everything esbuild bundled! -->
+
+    <!-- CRITICAL FIX: Point directly to app.js in the same directory -->
     <script type="module" src="app.js"></script>
+
 </body>
 </html>
 
