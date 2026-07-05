@@ -1,0 +1,169 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+body {
+    overflow: hidden;
+    background-color: #0d0d0d;
+    color: #ffffff;
+    width: 100vw;
+    height: 100vh;
+}
+
+#bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    display: block;
+}
+
+.ui-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2.5rem;
+    pointer-events: none; 
+    /* Enable 3D rendering context across the entire overlay layout */
+    perspective: 1000px; 
+}
+
+.discipline-nav, .info-card, .controls button {
+    pointer-events: auto; 
+}
+
+/* Discipline Navigation */
+.discipline-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    transform-style: preserve-3d;
+}
+
+/* Project Info Card */
+.info-card {
+    max-width: 420px;
+    background: rgba(15, 15, 15, 0.75);
+    padding: 2rem;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: auto;
+    margin-bottom: auto;
+    transform: translateZ(20px); /* Pushes content forward in 3D space */
+}
+
+.info-card h1 {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+.info-card p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #cccccc;
+}
+
+/* HUD Controls */
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transform-style: preserve-3d;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(15, 15, 15, 0.75);
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    transform-style: preserve-3d;
+}
+
+.label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: #888888;
+    font-weight: bold;
+}
+
+/* ==========================================
+   3D CORE BUTTON STYLES
+   ========================================== */
+.page-btn, .action-btn {
+    background: rgba(0, 0, 0, 0.6);
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    backdrop-filter: blur(4px);
+    
+    /* Prepares the individual element to process clean 3D shifts */
+    transform-style: preserve-3d;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                background-color 0.2s ease, 
+                border-color 0.2s ease, 
+                color 0.2s ease;
+    
+    /* Prevent default text highlighting during fast clicks */
+    /* user-select: none;  */
+    pointer-events: auto;
+}
+
+/* Action button variation tweaks */
+.action-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+.active {
+    background: #cccccc;
+    color: #000000;
+    border-color: #ffffff;
+    /* Lift slightly off the grid and twist on hover */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.page-btn:hover, .action-btn:hover {
+    color: #00FFFF;
+    border-color: #ffffff;
+    /* Lift slightly off the grid and twist on hover */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+}
+
+.active .disabled {
+
+    background: #111111;
+
+}
+
+.disabled {
+
+    color: #eeeeee;
+    pointer-events: none;
+}
+

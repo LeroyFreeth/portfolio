@@ -1,0 +1,46 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Portfolio</title>
+</head>
+<body>
+    <!-- The Three.js Backdrop Target Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Overlay Interface Element Frame -->
+    <main class="ui-container">
+        <nav id="pages" class="page-nav">
+        </nav>
+
+        <nav id="categories" class="category-filter">
+        </nav>
+
+        <nav id="projects" class="">
+        </nav>
+
+        <section class="info-card">
+            <h1 id="project-title">Initializing...</h1>
+            <p id="project-desc">Connecting to graphics engine runtime matrix.</p>
+        </section>
+
+        <footer class="controls">
+            <div class="control-group">
+                <span class="label">Images</span>
+                <button class="action-btn" id="prev-img">← Prev</button>
+                <button class="action-btn" id="next-img">Next →</button>
+            </div>
+            <div class="control-group">
+                <span class="label">Projects</span>
+                <button class="action-btn" id="prev-proj">← Prev Project</button>
+                <button class="action-btn" id="next-proj">Next Project →</button>
+            </div>
+        </footer>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
+
