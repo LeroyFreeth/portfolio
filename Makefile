@@ -12,6 +12,7 @@ CORE_SRCS   = $(SRC_DIR)/engine.c
 WASM_OUT    = $(PUBLIC_DIR)/logic.wasm
 LINUX_OUT   = desktop_app
 WIN_OUT     = desktop_app.exe
+JS_OUT      = $(PUBLIC_DIR)/app.js
 
 # ====================================================================
 #  1. WEB TARGET (WebGPU / WebAssembly)
@@ -21,11 +22,12 @@ WASM_CFLAGS = --target=wasm32 -O3 -nostdlib -Wall -Wextra
 WASM_LDFLAGS= -Wl,--no-entry -Wl,--export-all -Wl,--allow-undefined
 
 web:
-	@echo "Compiling Core Logic to WebAssembly..."
-	@$(WASM_CC) $(WASM_CFLAGS) $(WASM_LDFLAGS) -o $(WASM_OUT) \
-		src/engine.c src/graphic_drivers/wasm_exports.c
+	@echo "Building WebAssembly Binary..."
+	@clang --target=wasm32 -O3 -nostdlib -Wl,--no-entry -Wl,--export-all -Wl,--allow-undefined \
+		-o $(WASM_OUT) $(CORE_SRCS) $(DRV_DIR)/wasm_exports.c
 	
-	@echo "Bundling JavaScript Modules natively via esbuild..."
+	@echo "Bundling JavaScript Engine Modules..."
+	@# This forces esbuild to read your root js/ directory and generate public/app.js
 	@$(ESBUILD) js/main.js --bundle --minify --outfile=$(JS_OUT)
 # ====================================================================
 #  2. LINUX TARGETS (Fedora 44 / Wayland / Native GCC)
