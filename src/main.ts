@@ -107,6 +107,16 @@ const level = new Level(scene, camera)
 
 //Setup ui material
 const portfolio_mat = PortfolioMaterial()
+
+// var portfolio_mat = [
+// 	new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/8B1rYNY.png") }),
+// 	new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/8w6LAV6.png") }),
+// 	new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/aVCY4ne.png") }),
+// 	new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/tYOW02D.png") }),
+// 	new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/nVAIICM.png") }),
+// 	new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/EDr3ed3.png") })
+// ];
+
 const portfolio = new PortfolioItemMenu(portfolio_mat, clock, () => {
 	load_helper.loadedDependency('portfolio')
 })
@@ -242,18 +252,22 @@ for (let i = 0; i < ui_element_arr.length; i++) {
 		: is_canvas ? portfolio_mat
 			: is_last ? ui_mat_color_arr[3]
 				: ui_mat_color_arr[4]
-
-	const three_js_html_ui_object = new ThreeJsHtmlUi(ui_element, camera, depth, scene, html_ui_mat, true)
+	const html_ui_z = is_canvas ? 1 : 0
+	const three_js_html_ui_object = new ThreeJsHtmlUi(html_ui_z, ui_element, camera, depth, scene, html_ui_mat, true)
 	level.add_tickable(three_js_html_ui_object, false)
-	if (!shallow) raycastable_object_arr.push(three_js_html_ui_object.plane)
+	if (!shallow) raycastable_object_arr.push(three_js_html_ui_object.mesh)
 	if (!is_canvas) continue
 
-	ui_portfolio_object = three_js_html_ui_object.plane
+	ui_portfolio_object = three_js_html_ui_object.mesh
 
-	const track_rotate_plane_y_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.2, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-	const track_rotate_plane_y = new Track('track_rotate_plane_y', [track_rotate_plane_y_clip])
-	portfolio_timeline.integrate_track(track_rotate_plane_y)
-	portfolio_timeline.bind_to_track(track_rotate_plane_y.id, three_js_html_ui_object.plane.rotation, 'y')
+	const track_rotate_y_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.1, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
+	const track_rotate_y = new Track('track_rotate_y', [track_rotate_y_clip])
+	portfolio_timeline.integrate_track(track_rotate_y)
+	portfolio_timeline.bind_to_track(track_rotate_y.id, three_js_html_ui_object.mesh.rotation, 'y')
+	const track_rotate_z_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.01, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
+	const track_rotate_z = new Track('track_rotate_z', [track_rotate_z_clip])
+	portfolio_timeline.integrate_track(track_rotate_z)
+	portfolio_timeline.bind_to_track(track_rotate_z.id, three_js_html_ui_object.mesh.rotation, 'z')
 
 	// TODO: three-js-html-ui always parallexes - Threfore this has some artifacts
 	// const track_translate_plane_y_clip = TrackClip.create_track_clip(0, 1, 0, 0.1, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
