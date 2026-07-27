@@ -34,7 +34,7 @@ ul>li {
 
 #top-portfolio-info {
     position: absolute;
-    top: 2%;
+    top: 0%;
     right: 0%;
     width: 30%;
     max-height: 0;
@@ -348,7 +348,7 @@ iframe {
 
     #top-portfolio-info {
         position: absolute;
-        top: 2%;
+        top: 0%;
         right: 0%;
         width: 30%;
     }
