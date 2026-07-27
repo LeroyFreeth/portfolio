@@ -17,23 +17,24 @@ import { Timeline } from './timeline/timeline';
 
 const style = window.getComputedStyle(document.body)
 
-const color_a_id = '--color-a-hex'
-const color_b_id = '--color-b-hex'
-const color_c_id = '--color-c-hex'
-const color_d_id = '--color-d-hex'
-const color_e_id = '--color-e-hex'
+const color_id_arr = [
+	'--color-a-hex',
+	'--color-b-hex',
+	'--color-c-hex',
+	'--color-d-hex',
+	'--color-e-hex',
+]
 
-const color_a = Number.parseInt(style.getPropertyValue(color_a_id).replace('#', '0x'))
-const renderer_clear_color = new THREE.Color().setHex(color_a)
+const renderer_clear_color = new THREE.Color().setHex(Number.parseInt(style.getPropertyValue(color_id_arr[0]).replace('#', '0x')))
 
 const target_watchers: THREE.Object3D[] = []
 
 const clock = new THREE.Clock();
 const canvas = document.getElementById('app') as HTMLCanvasElement
 const renderer = new THREE.WebGLRenderer({
-    canvas: canvas,
-    antialias: true,
-    stencil: false,
+	canvas: canvas,
+	antialias: true,
+	stencil: false,
 
 })
 
@@ -43,51 +44,43 @@ renderer.setSize(window.innerWidth, window.innerHeight)
 renderer.setClearColor(renderer_clear_color)
 
 window.addEventListener('resize', () => {
-    renderer.setSize(window.innerWidth, window.innerHeight)
+	renderer.setSize(window.innerWidth, window.innerHeight)
 })
 
 // Setup color management
 const color_palatte_manager = new ColorPaletteManager([
-    color_a_id,
-    color_b_id,
-    color_c_id,
-    color_d_id,
-    color_e_id,
+	color_id_arr[0],
+	color_id_arr[1],
+	color_id_arr[2],
+	color_id_arr[3],
+	color_id_arr[4],
 ], 5)
 
-const mat_color_a = new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_a_id) })
-const mat_color_b = new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_b_id) })
-const mat_color_c = new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_c_id) })
-const mat_color_d = new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_d_id) })
-const mat_color_e = new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_e_id) })
+const mat_color_arr = [
+	new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_id_arr[0]) }),
+	new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_id_arr[1]) }),
+	new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_id_arr[2]) }),
+	new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_id_arr[3]) }),
+	new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_id_arr[4]) }),
 
-const ui_mat_color_a = new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_a_id) })
-const ui_mat_color_b = new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_b_id) })
-const ui_mat_color_c = new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_c_id) })
-const ui_mat_color_d = new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_d_id) })
-const ui_mat_color_e = new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_e_id) })
+]
+
+const ui_mat_color_arr = [
+	new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_id_arr[0]) }),
+	new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_id_arr[1]) }),
+	new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_id_arr[2]) }),
+	new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_id_arr[3]) }),
+	new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_id_arr[4]) }),
+
+]
 
 color_palatte_manager.on_palette_changed.add_handler((palette: number[]) => {
-    document.body.style.setProperty(color_a_id, `#${palette[0].toString(16)}`)
-    document.body.style.setProperty(color_b_id, `#${palette[1].toString(16)}`)
-    document.body.style.setProperty(color_c_id, `#${palette[2].toString(16)}`)
-    document.body.style.setProperty(color_d_id, `#${palette[3].toString(16)}`)
-    document.body.style.setProperty(color_e_id, `#${palette[4].toString(16)}`)
-
-
-    mat_color_a.color.setHex(palette[0])
-    mat_color_b.color.setHex(palette[1])
-    mat_color_c.color.setHex(palette[2])
-    mat_color_d.color.setHex(palette[3])
-    mat_color_e.color.setHex(palette[4])
-
-    ui_mat_color_a.color.setHex(palette[0])
-    ui_mat_color_b.color.setHex(palette[1])
-    ui_mat_color_c.color.setHex(palette[2])
-    ui_mat_color_d.color.setHex(palette[3])
-    ui_mat_color_e.color.setHex(palette[4])
-
-    renderer.setClearColor(renderer_clear_color.setHex(palette[4]))
+	for (let i = 0; i < mat_color_arr.length; i++) {
+		document.body.style.setProperty(color_id_arr[i], `#${palette[i].toString(16)}`)
+		mat_color_arr[i].color.setHex(palette[i])
+		ui_mat_color_arr[i].color.setHex(palette[i])
+	}
+	renderer.setClearColor(renderer_clear_color.setHex(palette[4]))
 })
 
 const scene = new THREE.Scene()
@@ -115,12 +108,12 @@ const level = new Level(scene, camera)
 //Setup ui material
 const portfolio_mat = PortfolioMaterial()
 const portfolio = new PortfolioItemMenu(portfolio_mat, clock, () => {
-    load_helper.loadedDependency('portfolio')
+	load_helper.loadedDependency('portfolio')
 })
 
 // Make the palette change when changing to a new portfolio piece
 portfolio.on_portfolio_data_changed.add_handler((data: PortfolioData) => {
-    color_palatte_manager.set_palette(data.color_palette, 1)
+	color_palatte_manager.set_palette(data.color_palette, 1)
 })
 
 level.add_tickable(portfolio, true)
@@ -137,15 +130,15 @@ level.add_tickable(scroll_timeline_player, false)
 const raycastable_object_arr: THREE.Object3D[] = []
 
 color_palatte_manager.on_palette_changed.add_handler((palette: number[]) => {
-    mat_color_a.color = new THREE.Color(palette[0])
-    mat_color_b.color = new THREE.Color(palette[1])
-    mat_color_c.color = new THREE.Color(palette[2])
-    mat_color_d.color = new THREE.Color(palette[3])
+	for (let i = 0; i < mat_color_arr.length - 1; i++) {
+		mat_color_arr[i].color.setHex(palette[i])
+	}
+
 })
 
 // Create meshes
 const box_geom = new THREE.BoxGeometry(0.1, 0.1, 0.1)
-const box_mesh = new THREE.Mesh(box_geom, mat_color_a)
+const box_mesh = new THREE.Mesh(box_geom, mat_color_arr[0])
 box_mesh.position.copy(new THREE.Vector3(0.2, -0.1, 4))
 scene.add(box_mesh)
 raycastable_object_arr.push(box_mesh)
@@ -156,19 +149,19 @@ scene.add(cone_pivot)
 target_watchers.push(cone_pivot)
 
 const cone_geom = new THREE.ConeGeometry(0.1, 0.4)
-const cone_mesh = new THREE.Mesh(cone_geom, mat_color_c)
+const cone_mesh = new THREE.Mesh(cone_geom, mat_color_arr[2])
 scene.add(cone_mesh)
 cone_mesh.rotation.x = Math.PI * 0.5
 cone_pivot.add(cone_mesh)
 
 const sphere_geom = new THREE.SphereGeometry(0.05)
-const sphere_mesh = new THREE.Mesh(sphere_geom, mat_color_b)
+const sphere_mesh = new THREE.Mesh(sphere_geom, mat_color_arr[1])
 sphere_mesh.position.copy(new THREE.Vector3(0.15, -0.1, 3.8))
 scene.add(sphere_mesh)
 raycastable_object_arr.push(sphere_mesh)
 
 const torus_geom = new THREE.TorusGeometry(0.06, 0.02)
-const torus_mesh = new THREE.Mesh(torus_geom, mat_color_d)
+const torus_mesh = new THREE.Mesh(torus_geom, mat_color_arr[3])
 torus_mesh.position.copy(new THREE.Vector3(0.16, -0.15, 3.3))
 scene.add(torus_mesh)
 target_watchers.push(torus_mesh)
@@ -218,8 +211,8 @@ portfolio_timeline.bind_to_track(camera_rotate_y_track.id, camera.rotation, 'y')
 
 // Start level after loading is done
 const load_helper = new LoadDependencyHelper(['portfolio'], () => {
-    // TODO: Some fixes on page loading. Still have to debug exactly what.
-    portfolio.open_for_hash()
+	// TODO: Some fixes on page loading. Still have to debug exactly what.
+	portfolio.open_for_hash()
 })
 
 // Setup raycaster
@@ -231,43 +224,43 @@ target.position.copy(camera.position)
 const ui_element_arr = ThreeJsHtmlUi.get_ui_elements()
 let ui_portfolio_object: THREE.Object3D
 for (let i = 0; i < ui_element_arr.length; i++) {
-    const ui_element = ui_element_arr[i]
-    const is_canvas = ui_element.id === 'app'
-    const is_info = ui_element.id === 'top-portfolio-info'
-    const is_last = i == ui_element_arr.length - 1
+	const ui_element = ui_element_arr[i]
+	const is_canvas = ui_element.id === 'app'
+	const is_info = ui_element.id === 'top-portfolio-info'
+	const is_last = i == ui_element_arr.length - 1
 
-    const shallow = (i + 1) % 2 == 0
-    const depth = is_info
-        ? 0.5
-        : shallow
-            ? 1.1
-            : is_canvas ? 2
-                : is_last ? 1.5
-                    : 1.5
-    const html_ui_mat = shallow
-        ? ui_mat_color_b
-        : is_canvas ? portfolio_mat
-            : is_last ? ui_mat_color_d
-                : ui_mat_color_e
+	const shallow = (i + 1) % 2 == 0
+	const depth = is_info
+		? 0.5
+		: shallow
+			? 1.1
+			: is_canvas ? 2
+				: is_last ? 1.5
+					: 1.5
+	const html_ui_mat = shallow
+		? ui_mat_color_arr[1]
+		: is_canvas ? portfolio_mat
+			: is_last ? ui_mat_color_arr[3]
+				: ui_mat_color_arr[4]
 
-    const three_js_html_ui_object = new ThreeJsHtmlUi(ui_element, camera, depth, scene, html_ui_mat, true)
-    level.add_tickable(three_js_html_ui_object, false)
-    if (!shallow) raycastable_object_arr.push(three_js_html_ui_object.plane)
-    if (!is_canvas) continue
+	const three_js_html_ui_object = new ThreeJsHtmlUi(ui_element, camera, depth, scene, html_ui_mat, true)
+	level.add_tickable(three_js_html_ui_object, false)
+	if (!shallow) raycastable_object_arr.push(three_js_html_ui_object.plane)
+	if (!is_canvas) continue
 
-    ui_portfolio_object = three_js_html_ui_object.plane
+	ui_portfolio_object = three_js_html_ui_object.plane
 
-    const track_rotate_plane_y_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.2, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-    const track_rotate_plane_y = new Track('track_rotate_plane_y', [track_rotate_plane_y_clip])
-    portfolio_timeline.integrate_track(track_rotate_plane_y)
-    portfolio_timeline.bind_to_track(track_rotate_plane_y.id, three_js_html_ui_object.plane.rotation, 'y')
+	const track_rotate_plane_y_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.2, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
+	const track_rotate_plane_y = new Track('track_rotate_plane_y', [track_rotate_plane_y_clip])
+	portfolio_timeline.integrate_track(track_rotate_plane_y)
+	portfolio_timeline.bind_to_track(track_rotate_plane_y.id, three_js_html_ui_object.plane.rotation, 'y')
 
-    // TODO: three-js-html-ui always parallexes - Threfore this has some artifacts
-    // const track_translate_plane_y_clip = TrackClip.create_track_clip(0, 1, 0, 0.1, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-    // const track_translate_plane_y = new Track('track_translate_plane_y', [track_translate_plane_y_clip])
-    // scroll_timeline.integrate_track(track_translate_plane_y)
-    // scroll_timeline.bind_to_track(track_translate_plane_y.id, three_js_html_ui_object._position, 'y')
-    // scroll_timeline_player.update_duration()
+	// TODO: three-js-html-ui always parallexes - Threfore this has some artifacts
+	// const track_translate_plane_y_clip = TrackClip.create_track_clip(0, 1, 0, 0.1, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
+	// const track_translate_plane_y = new Track('track_translate_plane_y', [track_translate_plane_y_clip])
+	// scroll_timeline.integrate_track(track_translate_plane_y)
+	// scroll_timeline.bind_to_track(track_translate_plane_y.id, three_js_html_ui_object._position, 'y')
+	// scroll_timeline_player.update_duration()
 }
 
 scroll_timeline_player.update_duration()
@@ -279,47 +272,47 @@ const plane_intersect_point = new THREE.Vector3()
 const camera_forward = new THREE.Vector3()
 
 function raycast_scene() {
-    raycaster.setFromCamera(mouse_position, camera)
-    const intersect = raycaster.intersectObject(ui_portfolio_object)
-    if (intersect) {
-        if (intersect.length > 0) {
-            portfolio_mat.uniforms._pointer_position.value = intersect[0].uv
-            portfolio_mat.uniforms._pointer_start_time.value = clock.getElapsedTime()
-        }
-    }
+	raycaster.setFromCamera(mouse_position, camera)
+	const intersect = raycaster.intersectObject(ui_portfolio_object)
+	if (intersect) {
+		if (intersect.length > 0) {
+			portfolio_mat.uniforms._pointer_position.value = intersect[0].uv
+			portfolio_mat.uniforms._pointer_start_time.value = clock.getElapsedTime()
+		}
+	}
 
-    const intersects = raycaster.intersectObjects(raycastable_object_arr)
-    if (intersects.length > 0)
-        target.position.addScaledVector(intersects[0].point.sub(target.position), 0.01)
-    else {
-        camera.getWorldDirection(camera_forward)
-        pointer_plane.normal = camera_forward.setScalar(-1)
-        raycaster.ray.intersectPlane(pointer_plane, plane_intersect_point)
-        plane_intersect_point.z = 4
-        target.position.addScaledVector(plane_intersect_point.sub(target.position), 0.01)
-    }
-    for (let i = 0; i < target_watchers.length; i++) {
-        const watcher = target_watchers[i]
-        const world_position = new THREE.Vector3()
-        const target_world_position = new THREE.Vector3()
-        watcher.getWorldPosition(world_position)
-        target.getWorldPosition(target_world_position)
-        const dir = target_world_position.sub(world_position).normalize()
-        watcher.lookAt(world_position.add(dir))
-    }
+	const intersects = raycaster.intersectObjects(raycastable_object_arr)
+	if (intersects.length > 0)
+		target.position.addScaledVector(intersects[0].point.sub(target.position), 0.01)
+	else {
+		camera.getWorldDirection(camera_forward)
+		pointer_plane.normal = camera_forward.setScalar(-1)
+		raycaster.ray.intersectPlane(pointer_plane, plane_intersect_point)
+		plane_intersect_point.z = 4
+		target.position.addScaledVector(plane_intersect_point.sub(target.position), 0.01)
+	}
+	for (let i = 0; i < target_watchers.length; i++) {
+		const watcher = target_watchers[i]
+		const world_position = new THREE.Vector3()
+		const target_world_position = new THREE.Vector3()
+		watcher.getWorldPosition(world_position)
+		target.getWorldPosition(target_world_position)
+		const dir = target_world_position.sub(world_position).normalize()
+		watcher.lookAt(world_position.add(dir))
+	}
 }
 
 // Game loop
 function tick() {
-    requestAnimationFrame(tick)
+	requestAnimationFrame(tick)
 
-    const delta = clock.getDelta()
-    level.tick(delta)
-    // Look, the box is rotating!
-    box_mesh.quaternion.multiply(rot)
-    raycast_scene()
+	const delta = clock.getDelta()
+	level.tick(delta)
+	// Look, the box is rotating!
+	box_mesh.quaternion.multiply(rot)
+	raycast_scene()
 
-    renderer.render(scene, camera);
+	renderer.render(scene, camera);
 }
 
 level.start()
