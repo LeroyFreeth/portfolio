@@ -7,13 +7,13 @@ import { ScrollTimelinePlayer } from './timeline/scroll-timeline-player';
 import { LoadDependencyHelper } from './utilities/load-utilities';
 
 import { PortfolioItemMenu, type PortfolioData } from './portfolio/portfolio-item-menu'
-import { ThreeJsHtmlUi } from './three-js/ui/three-js-html-ui';
 import { mouse_position } from './inputs/pointer-inputs';
 import { ColorPaletteManager } from './utilities/color-palette-manager';
 
 import { OUT_OF_BOUNDS_TYPE, Track, TrackClip } from './timeline/track';
 import { EASE_TYPE } from './timeline/easings';
 import { Timeline } from './timeline/timeline';
+import { element_to_3d } from './three-js/space_conversion';
 
 const style = window.getComputedStyle(document.body)
 
@@ -24,6 +24,11 @@ const color_id_arr = [
 	'--color-d-hex',
 	'--color-e-hex',
 ]
+
+interface IUi3dData {
+	element: HTMLElement
+	mesh: THREE.Mesh
+}
 
 const renderer_clear_color = new THREE.Color().setHex(Number.parseInt(style.getPropertyValue(color_id_arr[0]).replace('#', '0x')))
 
@@ -149,7 +154,7 @@ color_palatte_manager.on_palette_changed.add_handler((palette: number[]) => {
 // Create meshes
 const box_geom = new THREE.BoxGeometry(0.1, 0.1, 0.1)
 const box_mesh = new THREE.Mesh(box_geom, mat_color_arr[0])
-box_mesh.position.copy(new THREE.Vector3(0.2, -0.1, 4))
+box_mesh.position.copy(new THREE.Vector3(0.2, -0.1, 4.1))
 scene.add(box_mesh)
 raycastable_object_arr.push(box_mesh)
 
@@ -230,52 +235,48 @@ const raycaster = new THREE.Raycaster()
 const target = new THREE.Object3D()
 target.position.copy(camera.position)
 
+
 // Three Js ui - HTML background elements actually rendered within the scene
-const ui_element_arr = ThreeJsHtmlUi.get_ui_elements()
-let ui_portfolio_object: THREE.Object3D
-for (let i = 0; i < ui_element_arr.length; i++) {
-	const ui_element = ui_element_arr[i]
-	const is_canvas = ui_element.id === 'app'
-	const is_info = ui_element.id === 'top-portfolio-info'
-	const is_last = i == ui_element_arr.length - 1
 
-	const shallow = (i + 1) % 2 == 0
-	const depth = is_info
-		? 0.5
-		: shallow
-			? 1.1
-			: is_canvas ? 2
-				: is_last ? 1.5
-					: 1.5
-	const html_ui_mat = shallow
-		? ui_mat_color_arr[1]
-		: is_canvas ? portfolio_mat
-			: is_last ? ui_mat_color_arr[3]
-				: ui_mat_color_arr[4]
-	const html_ui_z = is_canvas ? 1 : 0
-	const three_js_html_ui_object = new ThreeJsHtmlUi(html_ui_z, ui_element, camera, depth, scene, html_ui_mat, true)
-	level.add_tickable(three_js_html_ui_object, false)
-	if (!shallow) raycastable_object_arr.push(three_js_html_ui_object.mesh)
-	if (!is_canvas) continue
+let ui3dData_arr: IUi3dData[] = [
+	{
 
-	ui_portfolio_object = three_js_html_ui_object.mesh
+		element: document.getElementById('app') as HTMLElement,
+		mesh: new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), portfolio_mat)
+	},
+	{
 
-	const track_rotate_y_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.1, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-	const track_rotate_y = new Track('track_rotate_y', [track_rotate_y_clip])
-	portfolio_timeline.integrate_track(track_rotate_y)
-	portfolio_timeline.bind_to_track(track_rotate_y.id, three_js_html_ui_object.mesh.rotation, 'y')
-	const track_rotate_z_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.01, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-	const track_rotate_z = new Track('track_rotate_z', [track_rotate_z_clip])
-	portfolio_timeline.integrate_track(track_rotate_z)
-	portfolio_timeline.bind_to_track(track_rotate_z.id, three_js_html_ui_object.mesh.rotation, 'z')
+		element: document.getElementById('top-portfolio-info') as HTMLElement,
+		mesh: new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat_color_arr[1])
+	},
+	{
 
-	// TODO: three-js-html-ui always parallexes - Threfore this has some artifacts
-	// const track_translate_plane_y_clip = TrackClip.create_track_clip(0, 1, 0, 0.1, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-	// const track_translate_plane_y = new Track('track_translate_plane_y', [track_translate_plane_y_clip])
-	// scroll_timeline.integrate_track(track_translate_plane_y)
-	// scroll_timeline.bind_to_track(track_translate_plane_y.id, three_js_html_ui_object._position, 'y')
-	// scroll_timeline_player.update_duration()
+		element: document.getElementById('about') as HTMLElement,
+		mesh: new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat_color_arr[3])
+	},
+
+]
+for (let i = 0; i < ui3dData_arr.length; i++) {
+	const mesh = ui3dData_arr[i].mesh
+	scene.add(mesh)
+	mesh.position.set(0, 0, -1 - (ui3dData_arr.length - 1 - i))
+	camera.add(mesh)
+	if (i === 0) {
+		raycastable_object_arr.push(mesh)
+	} else {
+		mesh.scale.set(1, 1, 0.01)
+	}
 }
+const ui_portfolio_object = ui3dData_arr[0].mesh
+
+const track_rotate_y_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.1, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
+const track_rotate_y = new Track('track_rotate_y', [track_rotate_y_clip])
+portfolio_timeline.integrate_track(track_rotate_y)
+portfolio_timeline.bind_to_track(track_rotate_y.id, ui_portfolio_object.rotation, 'y')
+const track_rotate_z_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.01, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
+const track_rotate_z = new Track('track_rotate_z', [track_rotate_z_clip])
+portfolio_timeline.integrate_track(track_rotate_z)
+portfolio_timeline.bind_to_track(track_rotate_z.id, ui_portfolio_object.rotation, 'z')
 
 scroll_timeline_player.update_duration()
 
@@ -316,13 +317,27 @@ function raycast_scene() {
 	}
 }
 
+const fps = 120 
+const desired_delta = 1/fps
+let prev_elapsed_time = 0;
 // Game loop
 function tick() {
+	const elapsed_time = performance.now()
 	requestAnimationFrame(tick)
 
-	const delta = clock.getDelta()
+	const delta = (elapsed_time - prev_elapsed_time) / 1000
+	if (delta < desired_delta) {
+		return
+	}
+	prev_elapsed_time = elapsed_time
+
 	level.tick(delta)
-	// Look, the box is rotating!
+
+	for (let i = 0; i < ui3dData_arr.length; i++) {
+		const ui3dData = ui3dData_arr[i]
+		const mesh = ui3dData.mesh
+		element_to_3d(ui3dData.element, mesh.position, mesh.scale, camera, i > 0)
+	}
 	box_mesh.quaternion.multiply(rot)
 	raycast_scene()
 
