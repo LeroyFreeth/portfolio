@@ -47,7 +47,6 @@ class PortfolioItemMenu implements ITickable {
 	_portfolio_item_arr: HTMLElement[]
 	_texture_index: number
 	_data_index: number
-	_next_index: number
 
 	_active_item: HTMLElement | null
 	_timeline: Timeline
@@ -89,7 +88,6 @@ class PortfolioItemMenu implements ITickable {
 				scrollTo(0, 0)
 				this._last_scroll_height = window.scrollY
 				this.set_portfolio_data_for_index(i, true)
-				this._next_index = i
 				this.open_portfolio(true, null)
 			})
 
