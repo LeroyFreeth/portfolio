@@ -180,7 +180,11 @@ class PortfolioItemMenu implements ITickable {
 		const top_portfolio_info = document.getElementById(top_portfolio_info_id)
 		if (top_portfolio_info)
 			this._timeline.bind_to_track(track.id, top_portfolio_info.style, 'opacity')
+		const portfolio_controls = document.getElementById(portfolio_controls_id)
+		if (portfolio_controls)
+			this._timeline.bind_to_track(track.id, portfolio_controls.style, 'opacity')
 		this._timeline_player = new TimelinePlayer(this._timeline, OUT_OF_BOUNDS_TYPE.HOLD)
+		this._timeline.update_bindings()
 	}
 
 	open_for_hash() {
@@ -227,7 +231,6 @@ class PortfolioItemMenu implements ITickable {
 				}
 			}
 			if (portfolio_controls) {
-				portfolio_controls.classList.remove(fade_out_class)
 				portfolio_controls.classList.remove(pointer_none_class)
 				portfolio_controls.classList.add(pointer_auto_class)
 			}
@@ -269,7 +272,6 @@ class PortfolioItemMenu implements ITickable {
 			this._timeline_player.play(on_complete_cb)
 
 			if (portfolio_controls) {
-				portfolio_controls.classList.add(fade_out_class)
 				portfolio_controls.classList.add(pointer_none_class)
 				portfolio_controls.classList.remove(pointer_auto_class)
 			}
