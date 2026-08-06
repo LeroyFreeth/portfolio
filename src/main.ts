@@ -317,8 +317,8 @@ function raycast_scene() {
 	}
 }
 
-const fps = 120 
-const desired_delta = 1/fps
+const fps = 120
+const desired_delta = 1 / fps
 let prev_elapsed_time = 0;
 // Game loop
 function tick() {
