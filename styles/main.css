@@ -6,6 +6,9 @@
   --portfolio-item-columns: auto auto auto auto;
   --speed: 1;
 }
+a {
+  display: block;
+}
 
 html {
   height: 100%;
@@ -127,6 +130,7 @@ canvas {
   position: fixed;
   width: 100%;
   height: 100%;
+  top: 0;
 }
 
 html {
@@ -141,6 +145,7 @@ button {
 
 .header {
   position: fixed;
+  top: 0;
 }
 
 .left {
