@@ -1,348 +1,409 @@
-import * as THREE from 'three'
+import { Environment3d } from './environment_3d'
+import { State, Statemachine } from './statemachine/statemachine'
+import { StateGridMenu, type GridData } from './statemachine/states/state_menu'
+import { StateView } from './statemachine/states/state_view'
+import { ColorPaletteUtils } from './colors/color-palette'
+import { PortfolioDataManager } from './portfolio/portfolio-data-manager'
+import { about_data, portfolio_data_arr, type PortfolioData } from './portfolio/portfolio-data'
 
-import { PortfolioMaterial } from './three-js/materials/material-instantiator'
+import { Animator, OutOfBounds, type AnimationClip } from './timeline_data/animator'
+import { EASE_TYPE } from './timeline/easings'
 
-import { Level } from './three-js/level';
-import { ScrollTimelinePlayer } from './timeline/scroll-timeline-player';
-import { LoadDependencyHelper } from './utilities/load-utilities';
+enum CssClasses {
+	HIDE = 'hide',
+	ORDER = 'order',
 
-import { PortfolioItemMenu, type PortfolioData } from './portfolio/portfolio-item-menu'
-import { mouse_position } from './inputs/pointer-inputs';
-import { ColorPaletteManager } from './utilities/color-palette-manager';
+}
 
-import { OUT_OF_BOUNDS_TYPE, Track, TrackClip } from './timeline/track';
-import { EASE_TYPE } from './timeline/easings';
-import { Timeline } from './timeline/timeline';
-import { element_to_3d } from './three-js/space_conversion';
+let help_active = true
 
-const style = window.getComputedStyle(document.body)
+// Do not set to 0, it is a nill entry
+let start_portfolio_idx = 0
+for (let i = 0; i < portfolio_data_arr.length; i++) {
+	const data_id = window.location.hash.replace('#', '')
+	const data = portfolio_data_arr[i]
+	if (data.name === data_id) {
+		start_portfolio_idx = i
+		help_active = false
+	}
+}
 
+// Keeps track of the current porfolio item
+const portfolio_data_manager = new PortfolioDataManager(portfolio_data_arr)
+
+/* -----------------------------------------------------------------------------
+	§§ 1. DOM ELEMENTS 
+----------------------------------------------------------------------------- */
+
+// Fetch DOM elements
+const container = document.getElementsByClassName('container')[0] as HTMLElement
+const canvas = document.getElementById('canvas') as HTMLCanvasElement
+const focus = document.getElementById('focus') as HTMLElement
+const projects_btn = document.getElementById('projects-button') as HTMLButtonElement
+const help = document.getElementById('help') as HTMLButtonElement
+
+const drag_icon = focus.querySelector('.drag-icon') as SVGElement
+
+const info_container = document.getElementById('info') as HTMLElement
+const info_title = info_container.querySelector('#info h2') as HTMLElement
+const info_description = info_container.querySelector('#info #description') as HTMLElement
+const links_container = info_container.querySelector('.links')
+const tags_container = info_container.querySelector('.tags')
+const video_aspect_ratio = info_container.querySelector('.aspect-ratio') as HTMLElement
+let i_frame_element = info_container.querySelector('iframe') as HTMLIFrameElement
+const preview_img = info_container.querySelector('img ') as HTMLImageElement
+
+// Setup color changes 
 const color_id_arr = [
-	'--color-a-hex',
-	'--color-b-hex',
-	'--color-c-hex',
-	'--color-d-hex',
-	'--color-e-hex',
+	'--color-a',
+	'--color-b',
+	'--color-c',
+	'--color-d',
+	'--color-e',
+]
+const dynamic_colors = [
+	document.getElementsByClassName('dynamic-color-a'),
+	document.getElementsByClassName('dynamic-color-b'),
+	document.getElementsByClassName('dynamic-color-c'),
+	document.getElementsByClassName('dynamic-color-d'),
+	document.getElementsByClassName('dynamic-color-e'),
 ]
 
-interface IUi3dData {
-	element: HTMLElement
-	mesh: THREE.Mesh
+const element_arr = [container, canvas, focus, help, projects_btn, video_aspect_ratio, i_frame_element, preview_img, links_container, tags_container, drag_icon]
+for (const el of element_arr) {
+	if (!el) console.error('Missing an element')
 }
 
-const renderer_clear_color = new THREE.Color().setHex(Number.parseInt(style.getPropertyValue(color_id_arr[0]).replace('#', '0x')))
+let max_links = 0
+let max_tags = 0
+for (const portfolio_data of portfolio_data_arr) {
+	if (max_links < portfolio_data.links.length) max_links = portfolio_data.links.length
+	if (max_tags < portfolio_data.tags.length) max_tags = portfolio_data.tags.length
+}
 
-const target_watchers: THREE.Object3D[] = []
+const links: HTMLAnchorElement[] = new Array(max_tags)
+for (let i = 0; i < max_links; ++i) {
+	const list_element = document.createElement('li')
+	const a_element = document.createElement('a')
+	list_element.classList.add('padded')
+	list_element.appendChild(a_element)
+	links_container?.appendChild(list_element)
+	links[i] = a_element
+}
 
-const clock = new THREE.Clock();
-const canvas = document.getElementById('app') as HTMLCanvasElement
-const renderer = new THREE.WebGLRenderer({
-	canvas: canvas,
-	antialias: true,
-	stencil: false,
+const tags = new Array(max_tags)
+for (let i = 0; i < max_tags; ++i) {
+	const list_element = document.createElement('li')
+	const blockquote_element = document.createElement('blockquote')
+	list_element.appendChild(blockquote_element)
+	tags_container?.appendChild(list_element)
+	tags[i] = blockquote_element
+}
 
-})
+/* -----------------------------------------------------------------------------
+	§§ 2. COLORS 
+----------------------------------------------------------------------------- */
 
-renderer.shadowMap.enabled = true
-renderer.setPixelRatio(window.devicePixelRatio)
-renderer.setSize(window.innerWidth, window.innerHeight)
-renderer.setClearColor(renderer_clear_color)
+const color_count = color_id_arr.length
+const colors_from = new Array(color_count)
+const colors_to = new Array(color_count)
+const colors_current = new Array(color_count)
+// Set start colors
+const start_palette = portfolio_data_manager.get_portfolio_data_arr()[start_portfolio_idx].color_palette
+for (let i = 0; i < color_count; ++i) {
+	const color = start_palette[i]
+	colors_from[i] = color
+	colors_to[i] = color
+	colors_current[i] = color
+}
 
-window.addEventListener('resize', () => {
-	renderer.setSize(window.innerWidth, window.innerHeight)
-})
+/* -----------------------------------------------------------------------------
+	§§ 3. STATES 
+----------------------------------------------------------------------------- */
 
-// Setup color management
-const color_palatte_manager = new ColorPaletteManager([
-	color_id_arr[0],
-	color_id_arr[1],
-	color_id_arr[2],
-	color_id_arr[3],
-	color_id_arr[4],
-], 5)
-
-const mat_color_arr = [
-	new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_id_arr[0]) }),
-	new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_id_arr[1]) }),
-	new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_id_arr[2]) }),
-	new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_id_arr[3]) }),
-	new THREE.MeshPhongMaterial({ color: style.getPropertyValue(color_id_arr[4]) }),
-
-]
-
-const ui_mat_color_arr = [
-	new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_id_arr[0]) }),
-	new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_id_arr[1]) }),
-	new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_id_arr[2]) }),
-	new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_id_arr[3]) }),
-	new THREE.MeshBasicMaterial({ color: style.getPropertyValue(color_id_arr[4]) }),
-
-]
-
-color_palatte_manager.on_palette_changed.add_handler((palette: number[]) => {
-	for (let i = 0; i < mat_color_arr.length; i++) {
-		document.body.style.setProperty(color_id_arr[i], `#${palette[i].toString(16)}`)
-		mat_color_arr[i].color.setHex(palette[i])
-		ui_mat_color_arr[i].color.setHex(palette[i])
-	}
-	renderer.setClearColor(renderer_clear_color.setHex(palette[4]))
-})
-
-const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 0.5, 100)
-scene.add(camera)
-camera.position.set(0, 0, 5);
-camera.near = 0.01
-
-
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 5);
-hemiLight.position.set(1, 1, 0);
-scene.add(hemiLight);
-
-const dirLight = new THREE.DirectionalLight(0xffffff, 5);
-dirLight.position.set(0, 200, 100);
-dirLight.castShadow = true;
-dirLight.shadow.camera.top = 180;
-dirLight.shadow.camera.bottom = - 100;
-dirLight.shadow.camera.left = - 120;
-dirLight.shadow.camera.right = 120;
-scene.add(dirLight);
-
-const level = new Level(scene, camera)
-
-//Setup ui material
-const portfolio_mat = PortfolioMaterial()
-
-// var portfolio_mat = [
-// 	new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/8B1rYNY.png") }),
-// 	new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/8w6LAV6.png") }),
-// 	new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/aVCY4ne.png") }),
-// 	new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/tYOW02D.png") }),
-// 	new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/nVAIICM.png") }),
-// 	new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("https://i.imgur.com/EDr3ed3.png") })
-// ];
-
-const portfolio = new PortfolioItemMenu(portfolio_mat, clock, () => {
-	load_helper.loadedDependency('portfolio')
-})
-
-// Make the palette change when changing to a new portfolio piece
-portfolio.on_portfolio_data_changed.add_handler((data: PortfolioData) => {
-	color_palatte_manager.set_palette(data.color_palette, 1)
-})
-
-level.add_tickable(portfolio, true)
-
-// Create timelines 
-const portfolio_timeline = portfolio.timeline
-const portfolio_timeline_player = portfolio.timeline_player
-const scroll_timeline = new Timeline()
-const scroll_timeline_player = new ScrollTimelinePlayer(scroll_timeline, 0.9)
-level.add_tickable(portfolio_timeline_player, false)
-level.add_tickable(scroll_timeline_player, false)
-
-
-const raycastable_object_arr: THREE.Object3D[] = []
-
-color_palatte_manager.on_palette_changed.add_handler((palette: number[]) => {
-	for (let i = 0; i < mat_color_arr.length - 1; i++) {
-		mat_color_arr[i].color.setHex(palette[i])
-	}
-
-})
-
-// Create meshes
-const box_geom = new THREE.BoxGeometry(0.1, 0.1, 0.1)
-const box_mesh = new THREE.Mesh(box_geom, mat_color_arr[0])
-box_mesh.position.copy(new THREE.Vector3(0.2, -0.1, 4.1))
-scene.add(box_mesh)
-raycastable_object_arr.push(box_mesh)
-
-const cone_pivot = new THREE.Object3D()
-cone_pivot.position.copy(new THREE.Vector3(0.45, -0.1, 2))
-scene.add(cone_pivot)
-target_watchers.push(cone_pivot)
-
-const cone_geom = new THREE.ConeGeometry(0.1, 0.4)
-const cone_mesh = new THREE.Mesh(cone_geom, mat_color_arr[2])
-scene.add(cone_mesh)
-cone_mesh.rotation.x = Math.PI * 0.5
-cone_pivot.add(cone_mesh)
-
-const sphere_geom = new THREE.SphereGeometry(0.05)
-const sphere_mesh = new THREE.Mesh(sphere_geom, mat_color_arr[1])
-sphere_mesh.position.copy(new THREE.Vector3(0.15, -0.1, 3.8))
-scene.add(sphere_mesh)
-raycastable_object_arr.push(sphere_mesh)
-
-const torus_geom = new THREE.TorusGeometry(0.06, 0.02)
-const torus_mesh = new THREE.Mesh(torus_geom, mat_color_arr[3])
-torus_mesh.position.copy(new THREE.Vector3(0.16, -0.15, 3.3))
-scene.add(torus_mesh)
-target_watchers.push(torus_mesh)
-raycastable_object_arr.push(torus_mesh)
-
-// Animations
-const cone_translate_y_track_clip = TrackClip.create_track_clip(0, 1, cone_pivot.position.y, cone_pivot.position.y + .8, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-const cone_translate_y_track = new Track('cone_translate_y_track', [cone_translate_y_track_clip])
-scroll_timeline.integrate_track(cone_translate_y_track)
-scroll_timeline.bind_to_track(cone_translate_y_track.id, cone_pivot.position, 'y')
-
-const sphere_translate_x_track_clip = TrackClip.create_track_clip(0, 1, sphere_mesh.position.x, sphere_mesh.position.x - 0.05, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-const sphere_translate_x_track = new Track('sphere_translate_x_track', [sphere_translate_x_track_clip])
-portfolio_timeline.integrate_track(sphere_translate_x_track)
-portfolio_timeline.bind_to_track(sphere_translate_x_track.id, sphere_mesh.position, 'x')
-
-
-const torus_translate_x_track_clip = TrackClip.create_track_clip(0, 1, torus_mesh.position.x, torus_mesh.position.x + 0.05, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-const torus_translate_x_track = new Track('torus_translate_x_track', [torus_translate_x_track_clip])
-portfolio_timeline.integrate_track(torus_translate_x_track)
-portfolio_timeline.bind_to_track(torus_translate_x_track.id, torus_mesh.position, 'x')
-
-const torus_translate_z_track_clip = TrackClip.create_track_clip(0, 1, torus_mesh.position.z, torus_mesh.position.z - 1.3, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-const torus_translate_z_track = new Track('torus_translate_z_track', [torus_translate_z_track_clip])
-scroll_timeline.integrate_track(torus_translate_z_track)
-scroll_timeline.bind_to_track(torus_translate_z_track.id, torus_mesh.position, 'z')
-
-const camera_position_y_track_clip = TrackClip.create_track_clip(0, 1, 0, -Math.PI * 0.1, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-const camera_position_y_track = new Track('camera_position_y_track', [camera_position_y_track_clip])
-scroll_timeline.integrate_track(camera_position_y_track)
-scroll_timeline.bind_to_track(camera_position_y_track.id, camera.position, 'y')
-
-const camera_rotate_x_track_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.1, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-const camera_rotate_x_track = new Track('camera_rotate_y_track', [camera_rotate_x_track_clip])
-scroll_timeline.integrate_track(camera_rotate_x_track)
-scroll_timeline.bind_to_track(camera_rotate_x_track.id, camera.rotation, 'x')
-
-const camera_rotate_y_track_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.01, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-const camera_rotate_y_track = new Track('camera_rotate_y_track', [camera_rotate_y_track_clip])
-portfolio_timeline.integrate_track(camera_rotate_y_track)
-portfolio_timeline.bind_to_track(camera_rotate_y_track.id, camera.rotation, 'y')
-
-// const camera_rotate_y_track_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.1, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-// const camera_rotate_y_track = new Track('camera_rotate_y_track', [camera_rotate_y_track_clip])
-// scroll_timeline.integrate_track(camera_rotate_y_track)
-// scroll_timeline.bind_to_track(camera_rotate_y_track.id, camera.rotation, 'x')
-
-// Start level after loading is done
-const load_helper = new LoadDependencyHelper(['portfolio'], () => {
-	// TODO: Some fixes on page loading. Still have to debug exactly what.
-	portfolio.open_for_hash()
-})
-
-// Setup raycaster
-const raycaster = new THREE.Raycaster()
-const target = new THREE.Object3D()
-target.position.copy(camera.position)
-
-
-// Three Js ui - HTML background elements actually rendered within the scene
-
-let ui3dData_arr: IUi3dData[] = [
-	{
-
-		element: document.getElementById('app') as HTMLElement,
-		mesh: new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), portfolio_mat)
-	},
-	{
-
-		element: document.getElementById('top-portfolio-info') as HTMLElement,
-		mesh: new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat_color_arr[1])
-	},
-	{
-
-		element: document.getElementById('about') as HTMLElement,
-		mesh: new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat_color_arr[3])
-	},
-
-]
-for (let i = 0; i < ui3dData_arr.length; i++) {
-	const mesh = ui3dData_arr[i].mesh
-	scene.add(mesh)
-	mesh.position.set(0, 0, -1 - (ui3dData_arr.length - 1 - i))
-	camera.add(mesh)
-	if (i === 0) {
-		raycastable_object_arr.push(mesh)
-	} else {
-		mesh.scale.set(1, 1, 0.01)
+// Conversion from portfolio_data to grid_data
+const grid_data_arr: GridData[] = new Array(portfolio_data_arr.length)
+for (let i = 0; i < grid_data_arr.length; ++i) {
+	const portfolio_data = portfolio_data_arr[i]
+	grid_data_arr[i] = {
+		img_url: portfolio_data.image_url_arr[0],
+		span_x: portfolio_data.span_x,
+		span_y: portfolio_data.span_y,
 	}
 }
-const ui_portfolio_object = ui3dData_arr[0].mesh
 
-const track_rotate_y_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.1, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-const track_rotate_y = new Track('track_rotate_y', [track_rotate_y_clip])
-portfolio_timeline.integrate_track(track_rotate_y)
-portfolio_timeline.bind_to_track(track_rotate_y.id, ui_portfolio_object.rotation, 'y')
-const track_rotate_z_clip = TrackClip.create_track_clip(0, 1, 0, Math.PI * 0.01, EASE_TYPE.IN_OUT_QUAD, OUT_OF_BOUNDS_TYPE.HOLD, OUT_OF_BOUNDS_TYPE.HOLD)
-const track_rotate_z = new Track('track_rotate_z', [track_rotate_z_clip])
-portfolio_timeline.integrate_track(track_rotate_z)
-portfolio_timeline.bind_to_track(track_rotate_z.id, ui_portfolio_object.rotation, 'z')
+// Setup and init states
+const state_grid = new StateGridMenu(container, grid_data_arr)
+const state_view = new StateView()
+const states: State[] = [
+	state_grid,
+	state_view,
+]
 
-scroll_timeline_player.update_duration()
+const statemachine = new Statemachine(states)
 
-// Quick version to raycast some objects
-const rot = new THREE.Quaternion().setFromEuler(new THREE.Euler(0, Math.PI * 0.001, 0))
-const pointer_plane = new THREE.Plane()
-const plane_intersect_point = new THREE.Vector3()
-const camera_forward = new THREE.Vector3()
 
-function raycast_scene() {
-	raycaster.setFromCamera(mouse_position, camera)
-	const intersect = raycaster.intersectObject(ui_portfolio_object)
-	if (intersect) {
-		if (intersect.length > 0) {
-			portfolio_mat.uniforms._pointer_position.value = intersect[0].uv
-			portfolio_mat.uniforms._pointer_start_time.value = clock.getElapsedTime()
+/* -----------------------------------------------------------------------------
+	§§ 4. ANIMATIONS 
+----------------------------------------------------------------------------- */
+
+// Setup the animator
+const clip_sentence = { start: 'Hello, ', end: 'world!', duration_ms: 1500, ease: EASE_TYPE.IN_OUT_QUAD } as AnimationClip<string>
+
+// Create a small animation which lerps text as if previous text gets erased and new text gets typed
+const sencente_el = document.getElementById('sentence') as HTMLElement
+const lerp_sentence = (start: string, end: string, t: number) => {
+	const interval = 1 / (start.length + end.length)
+	const i = Math.floor(t / interval)
+
+	const start_i = Math.max(0, Math.min(start.length, i))
+	const start_string = start.split('')
+	start_string.splice(start.length - start_i, start_i)
+
+
+	const end_i = Math.max(0, Math.min(end.length, i - start_i))
+	const end_string = end.split('')
+	end_string.splice(end_i, end.length - end_i)
+	start_string.push(...end_string)
+	start_string.push('|')
+	// for (let i = start_string.length; i <= end.length; ++i) {
+	// 	start_string.push('\u00A0')
+	// }
+	const result = start_string.join('')
+	sencente_el.innerText = result
+	return result
+}
+// Animating cursor using the text pipe character
+const clip_cursor = { start: '\u00A0', end: '|', duration_ms: 1000, ease: EASE_TYPE.LINEAR } as AnimationClip<string>
+const lerp_cursor = (start: string, end: string, t: number): string => {
+	const s = sencente_el.innerText.split('')
+	s[s.length - 1] = t < 0.5 ? start : end
+	sencente_el.innerText = s.join('')
+	return sencente_el.innerText
+}
+
+const animator = new Animator()
+animator.add(clip_sentence, lerp_sentence, OutOfBounds.HOLD)
+animator.add(clip_cursor, lerp_cursor, OutOfBounds.LOOP)
+const text_clip_idx = animator.get_idx(clip_sentence)
+const lerp_clip_idx = animator.get_idx(animator.get_dummy())
+
+/* -----------------------------------------------------------------------------
+	§§ 5. EVENTS/CALLBACKS/BINDINGS 
+----------------------------------------------------------------------------- */
+
+// One central place to solve different bindings required for the state change
+// I do not want the states to know about their shared objects to avoid conflicts, but also not scatter all the listeners
+function state_changed(old_state: State, new_state: State) {
+	switch (new_state) {
+		case state_grid:
+			help.classList.add(CssClasses.HIDE)
+			Environment3d.box_to_element(canvas, false)
+			clip_sentence.start = ''
+			break
+		case state_view:
+			help.classList.remove(CssClasses.HIDE)
+			window.location.hash = portfolio_data_manager.get_portfolio_data().name
+
+			break
+
+	}
+}
+// Changed hovered grid item
+function grid_item_changed(idx: number, item: HTMLElement) {
+	Environment3d.box_to_element(item, false)
+	portfolio_data_manager.set_idx(idx, false)
+	update_box_textures(true)
+}
+// Store this between events
+let row = 0
+function update_box_textures(apply_immediately: boolean) {
+	const data_arr = portfolio_data_manager.get_portfolio_data_arr()
+	const next_url = data_arr[portfolio_data_manager.calc_idx_next()].image_url_arr[0]
+	const previous_url = data_arr[portfolio_data_manager.calc_idx_previous()].image_url_arr[0]
+	Environment3d.get_illusion().update_target_textures_y(next_url, previous_url, portfolio_data_manager.get_portfolio_data().image_url_arr, ((row % 4) + 4) % 4, apply_immediately)
+}
+// Rotated the box to a different row
+function row_box_changed(r: number) {
+	row += r
+	statemachine.switch_state(state_view, false)
+	portfolio_data_manager.set_idx(portfolio_data_manager.calc_idx_for_offset(r), false)
+	update_box_textures(false)
+}
+
+// Either:
+// 	Changed hovered grid item
+// 	Row bow changed
+// 	Click home button
+// 	(See above)
+function portfolio_data_changed(idx: number, portfolio_data: PortfolioData) {
+	// Do not broadcast to avoid infinite recursion
+	state_grid.set_idx(idx, false)
+
+	// idx 0 acts as a nill, and should not animate
+	if (idx === 0) return
+	drag_icon.classList.add(CssClasses.HIDE)
+
+	// Change color palette 
+	ColorPaletteUtils.set_target(portfolio_data.color_palette, colors_from, colors_to, colors_current)
+	animator.rewind_for_idx(lerp_clip_idx)
+
+	apply_portfolio_data(portfolio_data)
+}
+function apply_portfolio_data(portfolio_data: PortfolioData) {
+	// Set title
+	info_title.classList.remove('fade-in-left')
+	info_title.style.opacity = '0'
+	void info_title.offsetWidth
+	info_title.classList.add('fade-in-left')
+
+	// Set summary 'typed' text
+	animator.clips[text_clip_idx].start = ''
+	animator.clips[text_clip_idx].end = portfolio_data.pages[0]
+	animator.rewind_for_idx(text_clip_idx)
+	info_title.textContent = portfolio_data.title
+
+	// Set paragraph
+	info_description.classList.remove('fade-in-paragraph')
+	info_description.style.opacity = '0'
+	// Force it onto its paragraph child
+	if (info_description.firstElementChild)
+		info_description.firstElementChild.innerHTML = portfolio_data.pages[1] as string
+	void info_description.offsetWidth
+	info_description.classList.add('fade-in-paragraph')
+
+	// Set link content
+	for (let i = 0; i < max_links; ++i) {
+		if (i < portfolio_data.links.length) {
+			links[i].classList.remove(CssClasses.HIDE)
+			links[i].innerText = portfolio_data.links[i].text
+			links[i].href = portfolio_data.links[i].url
+			links[i].target = '_blank'
+		}
+		else links[i].classList.add(CssClasses.HIDE)
+	}
+
+	// Set tags
+	for (let i = 0; i < max_tags; ++i) {
+		const tag = tags[i]
+		if (i < portfolio_data.tags.length) {
+			tag.innerText = portfolio_data.tags[i]
+			tag.classList.remove(CssClasses.HIDE)
+		}
+		else tag.classList.add(CssClasses.HIDE)
+	}
+
+	// Terminate i-frame
+	const i_framge_parent = i_frame_element.parentElement;
+	if (i_framge_parent) {
+		if (i_frame_element.contentWindow) {
+			i_frame_element.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*')
+			i_frame_element.contentWindow.postMessage('{"method":"pause"}', '*')
+		}
+		const cloned_i_frame = i_frame_element.cloneNode(false) as HTMLIFrameElement
+		cloned_i_frame.removeAttribute('src') // Completely clean state
+		cloned_i_frame.classList.add(CssClasses.HIDE)
+		i_framge_parent.replaceChild(cloned_i_frame, i_frame_element)
+		i_frame_element = cloned_i_frame
+	}
+	i_frame_element.classList.add(CssClasses.HIDE)
+	i_frame_element.removeAttribute('src')
+	video_aspect_ratio.classList.add(CssClasses.HIDE)
+	preview_img.onclick = () => { }
+
+	// Setup iframe/preview
+	const img_url = portfolio_data.video.preview_image
+	const video_url = portfolio_data.video.url
+	if (img_url && video_url) {
+		video_aspect_ratio.classList.remove(CssClasses.HIDE)
+		preview_img.parentElement?.classList.remove(CssClasses.HIDE)
+		preview_img.src = img_url
+		preview_img.onclick = () => {
+			preview_img.parentElement?.classList.add(CssClasses.HIDE)
+			i_frame_element.src = portfolio_data.video.url
+			i_frame_element.classList.remove(CssClasses.HIDE)
+			info_container.scrollTo({ top: info_container.scrollHeight })
 		}
 	}
 
-	const intersects = raycaster.intersectObjects(raycastable_object_arr)
-	if (intersects.length > 0)
-		target.position.addScaledVector(intersects[0].point.sub(target.position), 0.01)
-	else {
-		camera.getWorldDirection(camera_forward)
-		pointer_plane.normal = camera_forward.setScalar(-1)
-		raycaster.ray.intersectPlane(pointer_plane, plane_intersect_point)
-		plane_intersect_point.z = 4
-		target.position.addScaledVector(plane_intersect_point.sub(target.position), 0.01)
-	}
-	for (let i = 0; i < target_watchers.length; i++) {
-		const watcher = target_watchers[i]
-		const world_position = new THREE.Vector3()
-		const target_world_position = new THREE.Vector3()
-		watcher.getWorldPosition(world_position)
-		target.getWorldPosition(target_world_position)
-		const dir = target_world_position.sub(world_position).normalize()
-		watcher.lookAt(world_position.add(dir))
+	info_container.scrollTo(0, 0)
+
+	if (statemachine.get_state() === state_view) {
+		window.location.hash = portfolio_data.name
 	}
 }
+statemachine.on_state_changed.addListener(state_changed)
+state_grid.on_item_changed.addListener(grid_item_changed)
+portfolio_data_manager.on_portfolio_data_changed.addListener(portfolio_data_changed)
+Environment3d.get_on_box_row_changed().addListener(row_box_changed)
 
-const fps = 120
-const desired_delta = 1 / fps
-let prev_elapsed_time = 0;
-// Game loop
+// Setup buttons
+help.addEventListener('click', () => {
+	statemachine.switch_state(state_view, false)
+	apply_portfolio_data(about_data)
+	Environment3d.reset_rotation()
+	drag_icon.classList.remove(CssClasses.HIDE)
+})
+projects_btn.addEventListener('click', () => { statemachine.switch_state(state_grid, false) })
+
+// Can preload all the textures if desired
+for (const portfolio_data of portfolio_data_arr) {
+	Environment3d.get_illusion().preload(portfolio_data.image_url_arr, Environment3d.get_renderer())
+}
+
+/* -----------------------------------------------------------------------------
+	§§ 6. TICK/UPDATE LOOP 
+----------------------------------------------------------------------------- */
+
+const hex_color = new Array(colors_current.length)
+let last_time = 0
 function tick() {
-	const elapsed_time = performance.now()
 	requestAnimationFrame(tick)
+	const time = performance.now()
+	const delta_ms = (time - last_time)
 
-	const delta = (elapsed_time - prev_elapsed_time) / 1000
-	if (delta < desired_delta) {
-		return
+	last_time = time
+
+	// ...Run systems and objects here
+	Environment3d.tick(delta_ms)
+	animator.tick(delta_ms)
+
+	// Apply colors
+	ColorPaletteUtils.lerp(colors_from, colors_to, colors_current, animator.get_value_for_idx(lerp_clip_idx))
+	for (let i = 0; i < dynamic_colors.length; ++i) {
+		hex_color[i] = `#${colors_current[i].toString(16)}`
+		for (const color of dynamic_colors[i]) {
+			color.style.setProperty('--color', hex_color[i])
+		}
 	}
-	prev_elapsed_time = elapsed_time
+	Environment3d.set_color_render_clear(colors_current[4])
+	Environment3d.set_color_box(colors_current[1])
+	// for (const svg of svgs) svg.setAttribute('fill', hex_color[0])
 
-	level.tick(delta)
-
-	for (let i = 0; i < ui3dData_arr.length; i++) {
-		const ui3dData = ui3dData_arr[i]
-		const mesh = ui3dData.mesh
-		element_to_3d(ui3dData.element, mesh.position, mesh.scale, camera, i > 0)
-	}
-	box_mesh.quaternion.multiply(rot)
-	raycast_scene()
-
-	renderer.render(scene, camera);
 }
 
-level.start()
+
+/* -----------------------------------------------------------------------------
+	§§ 7. FINAL INITIALIZATIONS 
+----------------------------------------------------------------------------- */
+
+statemachine.init()
+if (help_active) {
+	statemachine.switch_state(state_view, false)
+	portfolio_data_manager.set_idx(1, true)
+	apply_portfolio_data(about_data)
+}
+else {
+	if (start_portfolio_idx > 0) {
+		statemachine.switch_state(state_view, false)
+		portfolio_data_manager.set_idx(start_portfolio_idx, false)
+	} else {
+		statemachine.switch_state(state_grid, false)
+	}
+}
+update_box_textures(true)
+
 tick()
+
+
+

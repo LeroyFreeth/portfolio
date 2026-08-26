@@ -1,0 +1,32 @@
+.dynamic-color-a {
+  --color: #84828f;
+}
+.dynamic-color-b {
+  --color: #84828f;
+}
+.dynamic-color-c {
+  --color: #84828f;
+}
+.dynamic-color-d {
+  --color: #84828f;
+}
+.dynamic-color-e {
+  --color: #84828f;
+}
+.background-color {
+  background-color: var(--color);
+}
+.color {
+  color: var(--color);
+}
+
+.white{
+  --color: #ffffff;
+}
+svg {
+  fill: var(--color);
+  transition: fill 0.2s ease;
+}
+svg:hover {
+  fill: #ffffff;
+}

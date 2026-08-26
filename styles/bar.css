@@ -1,0 +1,35 @@
+.side-bar {
+  position: fixed;
+  top: 0;
+  /* background-color: var(--color-d-hex); */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.vertical {
+  -webkit-transform: translateX(-75%) rotate(180deg);
+  -moz-transform: translateX(-75%) rotate(180deg);
+  -o-transform: translateX(-75%) rotate(180deg);
+  -ms-transform: translateX(-75%) rotate(180deg);
+  transform: translateX(-75%) rotate(180deg);
+
+  /* white-space: nowrap; */
+  writing-mode: vertical-lr;
+  padding: 1em;
+}
+
+.left {
+  margin-left: 0;
+  width: var(--left-width);
+}
+
+.bottom {
+  margin-top: auto;
+}
+
+.top {
+  margin-top: 0;
+}

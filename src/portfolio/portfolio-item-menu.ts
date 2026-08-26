@@ -7,7 +7,6 @@ import { EASE_TYPE } from '../timeline/easings'
 import { TimelinePlayer } from '../timeline/timeline-player'
 import { CodeEvent } from '../utilities/code-event'
 import { portfolio_data_arr, type PortfolioData } from './portfolio-data'
-import type { ITickable } from '../three-js/level'
 
 
 // Css classes used
@@ -133,12 +132,12 @@ class PortfolioItemMenu implements ITickable {
 		const next_texture_for_item = document.getElementById('prev-texture-button')
 		next_texture_for_item?.addEventListener('click', () => {
 			this._set_texture_for_index_offset(-1)
-			this._ui_mat.uniforms._set_texture_time.value = this._clock.getElapsedTime()
+			this._ui_mat.uniforms._set_texture_time.value = performance.now() / 1000
 		})
 		const prev_texture_for_item = document.getElementById('next-texture-button')
 		prev_texture_for_item?.addEventListener('click', () => {
 			this._set_texture_for_index_offset(1)
-			this._ui_mat.uniforms._set_texture_time.value = this._clock.getElapsedTime()
+			this._ui_mat.uniforms._set_texture_time.value = performance.now() / 1000
 		})
 		const next_item = document.getElementById('prev-item-button')
 		next_item?.addEventListener('click', () => {

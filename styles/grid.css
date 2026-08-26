@@ -1,0 +1,84 @@
+.o-grid {
+  --grid-layout-gap: 0px;
+  --grid-column-count: 6;
+  --grid-item--min-width: 200px;
+
+  --gap-count: calc(var(--grid-column-count) - 1);
+  --total-gap-width: calc(var(--gap-count) * var(--grid-layout-gap));
+  --grid-item--max-width: calc(
+    (100% - var(--total-gap-width)) / var(--grid-column-count)
+  );
+
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(max(var(--grid-item--min-width), var(--grid-item--max-width)), 1fr)
+  );
+  grid-gap: var(--grid-layout-gap);
+  grid-auto-flow: dense;
+  width: 100%;
+  z-index: 100;
+}
+
+.o-grid__collapse {
+}
+
+.o-grid__item {
+  /* box-shadow: inset 0 0 0 1px red; */
+  position: relative;
+  padding-top: 50%;
+}
+
+.o-grid__remove {
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
+
+.o-grid__animate {
+  -moz-transition: all 0.33s ease;
+  -webkit-transition: all 0.33s ease;
+  -o-transition: all 0.33s ease;
+  transition: all 0.33s ease;
+}
+
+.o-grid__content {
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  opacity: 1;
+  pointer-events: auto;
+  filter: grayscale(50%);
+  padding: 1em;
+}
+
+.o-grid__content:hover {
+  padding: 2em !important;
+  filter: grayscale(0%) !important;
+}
+.o-grid__selected {
+}
+.o-grid__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@media (orientation: landscape) {
+  .o-grid {
+    min-height: 0;
+    max-height: 100%;
+  }
+}
+
+@media (orientation: portrait) {
+  .o-grid {
+    min-height: 100vh;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -2,113 +2,157 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="freeth-portfolio.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio - Leroy Freeth</title>
-  <link rel="stylesheet" href="styles/main.css" />
-  <link rel="stylesheet" href="styles/style.css" />
+	<meta charset="UTF-8" />
+	<link rel="icon" type="image/svg+xml" href="freeth-portfolio.svg" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Portfolio - Leroy Freeth</title>
+	<link rel="stylesheet" href="styles/main.css" />
+	<link rel="stylesheet" href="styles/bar.css" />
+	<link rel="stylesheet" href="styles/grid.css" />
+	<link rel="stylesheet" href="styles/canvas.css" />
+	<link rel="stylesheet" href="styles/colors.css" />
+	<link rel="stylesheet" href="styles/typing.css" />
 </head>
 
 <body ondragstart="return false;" ondrop="return false;">
+	<div class="container right">
+		<div class="canvas__layer">
+			<div class="o-grid"></div>
+		</div>
+		<div class="canvas__layer">
+			<div id="info" class="info background-color dynamic-color-b out">
+				<section class="ltr">
+					<div class="background-color dynamic-color-a">
 
-  <div id="home"></div>
-  <canvas id="app" class="three-js-ui"></canvas>
+						<header>
+							<h2>
+								<!-- Portfolio title will be inserted here at runtime-->
+								title
+							</h2>
+						</header>
+					</div>
+					<div id="summary" class="typing-container">
+						<span id="sentence" class="sentence">
+							<!-- sentence will be inserted here at runtime-->
+						</span>
+					</div>
+					<div id="description">
+						<p>paragraph</p>
+						<ul class="links">
+							<!-- Portfolio links will be inserted here at runtime-->
+						</ul>
+						<div class="aspect-ratio">
+							<div id="video-player" class="fill">
+								<iframe class="fill" allow="fullscreen" loading="lazy"
+									width="420" height="315" src=""></iframe>
+							</div>
 
-  <div id="header" class="header left">
-    <nav id="nav">
-      <ul class="columns-4" style="position: absolute; top:0; left: 0; right: 0;">
-        <li class="vertical"><a id="home-button" href="#home">Home</a></li>
-        <li class="vertical"><a href="#portfolio">Portfolio</a></li>
-        <li class="vertical"><a href="#about">About</a></li>
-      </ul>
-    </nav>
+							<div id="video-preview" class="fill hovereffect">
+								<img class="fill pointer-auto title-holder"
+									style='object-fit: contain;' src='' />
+								<div class="title">Play</div>
 
-    <div class="center columns-4" style="position: absolute; bottom:0; left: 0; right: 0;">
-      <a href="https://github.com/LeroyFreeth" class="icon brands fa-github padded-bottom"><span
-          class="label">Github</span></a>
-      <a href="mailto:ldfreeth@hotmail.com" class="icon solid fa-envelope padded-bottom"><span
-          class="label">Email</span></a>
-    </div>
-  </div>
+							</div>
+						</div>
 
-  <section id="portfolio-controls">
-    <button id="prev-texture-button" type="button">← Previous Image</button>
-    <button id="next-texture-button" type="button">→ Next Image</button>
-    <button id="return-to-portfolio-button" type="button">↑ Close</button>
+						<ul class="tags horizontal">
+							<!-- Portfolio tags will be inserted here at runtime-->
+						</ul>
+					</div>
+				</section>
+			</div>
+			<div id="focus" class="focus">
+				<div class="drag-icon white">
+					<svg height="80px" width="80px" version="1.1" id="Capa_1"
+						xmlns="http://www.w3.org/2000/svg"
+						xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 399.07 399.07"
+						xml:space="preserve">
+						<g>
+							<path d="M365.083,74.011L348.113,57.04c-3.906-3.904-10.236-3.904-14.143,0c-3.873,3.873-3.899,10.129-0.091,14.042h-22.365
+		c-5.522,0-10,4.477-10,10c0,5.523,4.478,10,10,10h22.365c-3.809,3.913-3.782,10.169,0.091,14.042
+		c1.953,1.952,4.512,2.929,7.071,2.929c2.56,0,5.118-0.977,7.071-2.929l16.971-16.971C368.988,84.248,368.988,77.916,365.083,74.011
+		z" />
+							<path d="M225.747,105.124c1.953,1.952,4.512,2.929,7.071,2.929c2.56,0,5.118-0.977,7.071-2.929
+		c3.873-3.873,3.899-10.129,0.091-14.042h22.365c5.522,0,10-4.477,10-10c0-5.523-4.478-10-10-10h-22.365
+		c3.809-3.913,3.782-10.169-0.091-14.042c-3.906-3.904-10.236-3.904-14.143,0l-16.971,16.971c-3.905,3.905-3.905,10.237,0,14.143
+		L225.747,105.124z" />
+							<path d="M286.93,95.666c-5.522,0-10,4.477-10,10v22.365c-3.913-3.809-10.168-3.782-14.042,0.091
+		c-3.905,3.905-3.905,10.237,0,14.143l16.971,16.971c1.953,1.953,4.512,2.929,7.071,2.929c2.56,0,5.118-0.976,7.071-2.929
+		l16.971-16.971c3.905-3.905,3.905-10.237,0-14.143c-3.874-3.873-10.129-3.9-14.042-0.091v-22.365
+		C296.93,100.143,292.452,95.666,286.93,95.666z" />
+							<path d="M276.93,34.133v22.365c0,5.523,4.478,10,10,10c5.522,0,10-4.477,10-10V34.133c1.94,1.889,4.453,2.838,6.971,2.838
+		c2.56,0,5.118-0.976,7.071-2.929c3.905-3.905,3.905-10.237,0-14.143L294.001,2.929c-3.906-3.905-10.236-3.905-14.142,0
+		L262.888,19.9c-3.905,3.905-3.905,10.237,0,14.143C266.762,37.915,273.017,37.942,276.93,34.133z" />
+							<path d="M276.403,184.847c-5.572,0-11.22,1.072-16.508,3.065c-7.351-14.431-22.344-24.338-39.604-24.338
+		c-6.152,0-12.015,1.166-17.344,3.271c-7.494-14.005-22.274-23.558-39.244-23.558c-4.251,0-8.414,0.594-12.394,1.743
+		c0.004-4.974,0.008-10.103,0.012-15.225l0.028-39.856c0.008-10.637,0.011-15.562-0.033-18.109h0.043
+		c0-22.711-19.849-41.188-44.246-41.188c-24.521,0-44.471,19.95-44.471,44.472v135.569c-16.375,5.479-30.83,20.593-31.436,42.169
+		c-0.949,33.752,1.816,76.462,31.893,107.396c25.391,26.114,65.127,38.809,121.482,38.809c50.684,0,88.169-14.909,111.414-44.311
+		c16.326-20.651,24.955-48.48,24.955-80.48l-0.078-44.995C320.873,204.797,300.924,184.847,276.403,184.847z M184.582,379.07
+		c-119.311,0-135.217-60.478-133.383-125.644c0.441-15.717,13.953-25,25-25v28.823c0,3.625,2.514,4.047,3.264,4.047
+		s3.18-0.412,3.18-4.038c0-3.499,0-182.132,0-182.132c0-13.515,10.955-24.472,24.471-24.472c12.402,0,24.246,8.881,24.246,21.188
+		c0.008,0.045-0.064,89.86-0.076,111.957c-0.002,0.046-0.014,0.089-0.014,0.135v4.617c0,2.201,1.785,3.985,3.986,3.985
+		c2.199,0,3.984-1.784,3.984-3.985v-1.194c0.217-13.328,11.082-24.067,24.463-24.067c13.514,0,24.473,10.957,24.473,24.473
+		l0.018,17.721c0,2.168,1.758,3.925,3.926,3.925c2.166,0,3.924-1.757,3.924-3.925l-0.008-1.014
+		c0-12.305,11.955-20.894,24.256-20.894c13.516,0,24.422,10.956,24.422,24.472l0.049,17.937c0,2.109,1.709,3.819,3.818,3.819
+		c2.109,0,3.818-1.71,3.818-3.819l-0.014-1.365c0-11.19,12.109-19.771,24.018-19.771c13.514,0,24.471,10.957,24.471,24.472
+		l0.078,44.96C300.951,316.094,284.69,379.07,184.582,379.07z" />
+						</g>
+					</svg>
+				</div>
+			</div>
+		</div>
+		<canvas id="canvas"></canvas>
+	</div>
+	<div class="side-bar left background-color dynamic-color-d">
+		<div class="top">
+			<a id="help" class="dynamic-color-a">
+				<svg width="48px" height="48px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+					<title>comment-help-solid</title>
+					<g id="Layer_2" data-name="Layer 2">
+						<g id="invisible_box" data-name="invisible box">
+							<rect width="48" height="48" fill="none" />
+						</g>
+						<g id="icons_Q2" data-name="icons Q2">
+							<path
+								d="M42,4H6A2,2,0,0,0,4,6V42a2,2,0,0,0,2,2,2,2,0,0,0,1.4-.6L15.2,36H42a2,2,0,0,0,2-2V6A2,2,0,0,0,42,4ZM26,28.4c-.1.1-.1.2-.2.4s-.1.2-.1.3l-.3.3a1.9,1.9,0,0,1-2.8,0l-.3-.3c0-.1-.1-.2-.1-.3s-.1-.3-.2-.4V28a2,2,0,0,1,.6-1.4,1.9,1.9,0,0,1,2.8,0A2,2,0,0,1,26,28Zm.8-5.5h-.4l-1.1.5A1.9,1.9,0,0,1,24,24a1.6,1.6,0,0,1-1.3-.6,1.9,1.9,0,0,1-.1-2.8,6.4,6.4,0,0,1,2.2-1.2l.3-.2a2.6,2.6,0,0,0,1.8-2.9A3,3,0,0,0,24.6,14a3.3,3.3,0,0,0-3.3,1.5,1.9,1.9,0,0,1-2.7.8,2.1,2.1,0,0,1-.8-2.7,7.2,7.2,0,0,1,7.6-3.5,7.1,7.1,0,0,1,5.5,5.4A6.8,6.8,0,0,1,26.8,22.9Z" />
+						</g>
+					</g>
+				</svg>
+			</a>
 
-    <button id="prev-item-button" type="button">← Previous Project</button>
-    <button id="next-item-button" type="button">→ Next Project</button>
-  </section>
+		</div>
 
-  <div class="container right">
-    <section id="top-portfolio-info" class="three-js-ui fader fade-out mover move-up">
-      <header>
-        <h2>
-          <!-- Portfolio title will be inserted here at runtime-->
-          title
-        </h2>
-      </header>
-      <p>
-        <!-- Portfolio info will be inserted here at runtime-->
-        info
-      </p>
-
-      <p>
-        <!-- Portfolio info will be inserted here at runtime-->
-        more info
-      </p>
-
-      <ul class="links">
-        <!-- Portfolio links will be inserted here at runtime-->
-      </ul>
-
-      <div id="video-preview" class="aspect-ratio hovereffect">
-
-        <img class="pointer-auto title-holder" style='object-fit: contain;' src='' />
-        <div class="title">Play</div>
-      </div>
-      <div id="video-player" class="aspect-ratio">
-        <iframe class="aspect-ratio" allow="fullscreen" loading="lazy" width="420" height="315" src=""></iframe>
-      </div>
-
-      <ul class="tags horizontal">
-        <!-- Portfolio tags will be inserted here at runtime-->
-      </ul>
-
-
-      </iframe>
-    </section>
-
-    <section id="portfolio" class="bottom pointer-none">
-      <div id="portfolio-item-content-container" class="container grid">
-        <!-- Portfolio items will be inserted here at runtime-->
-      </div>
-    </section>
-    <section id="portfolio-collapser" class="flex collapsible pointer-none"></section>
-
-    <section id="about" class="three-js-ui">
-      <div id="about-container">
-        <header>
-          <h2>Portfolio - Leroy Freeth</h2>
-        </header>
-
-        <p>Hello there! I'm a Game/Software developer with nearly 5 years of experience creating games and
-          (web)applications. During my career I've worked with Unreal, Unity, BabylonJs and a little Godot. This comes
-          with their associated coding languages, such as C++/Blueprints, C#, Js & Ts and GdScript.
-        </p>
-      </div>
-    </section>
-
-    <footer id="footer" class="flex">
-      <div class="inner bottom">
-        <ul class="copyright ">
-          <li>&copy; Leroy Freeth</li>
-        </ul>
-      </div>
-    </footer>
-  </div>
-  <script type="module" src="./src/main.ts"></script>
+		<ul class="top">
+			<li class="vertical"><a class="color dynamic-color-a" id="projects-button"
+					href="#projects">Projects</a></li>
+			</li>
+		</ul>
+		<div class="bottom">
+			<a class="dynamic-color-a" href="https://github.com/LeroyFreeth">
+				<svg xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 640 640"><!--!Font Awesome Free v7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
+					<path
+						d="M280.5 426.5C214.5 418.5 168 371 168 309.5C168 284.5 177 257.5 192 239.5C185.5 223 186.5 188 194 173.5C214 171 241 181.5 257 196C276 190 296 187 320.5 187C345 187 365 190 383 195.5C398.5 181.5 426 171 446 173.5C453 187 454 222 447.5 239C463.5 258 472 283.5 472 309.5C472 371 425.5 417.5 358.5 426C375.5 437 387 461 387 488.5L387 540.5C387 555.5 399.5 564 414.5 558C505 523.5 576 433 576 321C576 179.5 461 64 319.5 64C178 64 64 179.5 64 321C64 432 134.5 524 229.5 558.5C243 563.5 256 554.5 256 541L256 501C249 504 240 506 232 506C199 506 179.5 488 165.5 454.5C160 441 154 433 142.5 431.5C136.5 431 134.5 428.5 134.5 425.5C134.5 419.5 144.5 415 154.5 415C169 415 181.5 424 194.5 442.5C204.5 457 215 463.5 227.5 463.5C240 463.5 248 459 259.5 447.5C268 439 274.5 431.5 280.5 426.5z" />
+				</svg>
+			</a>
+			<a class="dynamic-color-a" href="mailto:ldfreeth@hotmail.com">
+				<svg width="48px" height="48px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+					<title>mail-solid</title>
+					<g id="Layer_2" data-name="Layer 2">
+						<g id="invisible_box" data-name="invisible box">
+							<rect width="48" height="48" fill="none" />
+						</g>
+						<g id="icons_Q2" data-name="icons Q2">
+							<path
+								d="M44,7H4A2,2,0,0,0,2,9V39a2,2,0,0,0,2,2H44a2,2,0,0,0,2-2V9A2,2,0,0,0,44,7ZM24.5,22.4a.9.9,0,0,1-1,0L6,11H42Z" />
+						</g>
+					</g>
+				</svg>
+			</a>
+		</div>
+	</div>
+	<script type="module" src="./src/main.ts"></script>
 </body>
 
 </html>
