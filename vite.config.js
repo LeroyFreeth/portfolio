@@ -3,6 +3,7 @@ import basicSsl from "@vitejs/plugin-basic-ssl"
 
 
 export default defineConfig({
+	base: '/portfolio/',
 	publicDir: 'public',
 	plugins: [basicSsl()],
 	server: {
