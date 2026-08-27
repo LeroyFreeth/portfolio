@@ -4,8 +4,8 @@ import { RectCacheUtils, } from './utilities/rect-cache.ts'
 import { RotatorPointer } from './three-js/rotator-pointer.ts'
 import { RotatorGrid } from './three-js/rotator-grid.ts'
 import { RotatorGridIllusion } from './three-js/rotator-grid-illusion.ts'
-import { EASE_TYPE } from './timeline/easings.ts'
-import { Animator, OutOfBounds, type AnimationClip } from './timeline_data/animator.ts'
+import { EASE_TYPE } from './math/easings.ts'
+import { Animator, OutOfBounds, type AnimationClip } from './animator/animator.ts'
 import { CodeEventSingle } from './utilities/code-event.ts'
 import { Pointers } from './utilities/pointers.ts'
 
@@ -141,7 +141,10 @@ const lerp_box_scale = (start: THREE.Vector3, end: THREE.Vector3, t: number) => 
 
 // Note that we immediately use the target rotation of the rotator_grid as our clip end
 const clip_box_rotation = { start: box.quaternion.clone(), end: target_rotation, duration_ms: 500, ease: EASE_TYPE.LINEAR } as AnimationClip<THREE.Quaternion>
-const lerp_box_rotation = (start: THREE.Quaternion, end: THREE.Quaternion, t: number) => { return box.quaternion.slerp(end, t) }
+const lerp_box_rotation = (start: THREE.Quaternion, end: THREE.Quaternion, t: number) => {
+	start; // Little hack
+	return box.quaternion.slerp(end, t)
+}
 
 const clip_color_lerp = { start: 0, end: 1, duration_ms: 500, ease: EASE_TYPE.LINEAR } as AnimationClip<number>
 const lerp_color_lerp = (start: number, end: number, t: number) => {
@@ -165,7 +168,6 @@ const clip_idx_color_lerp = animator.get_idx(clip_color_lerp)
 let time = 0
 
 const panning_padding = 0.2
-const padding_multiplier = 1 / panning_padding
 
 
 /* -----------------------------------------------------------------------------

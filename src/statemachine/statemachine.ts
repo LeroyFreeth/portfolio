@@ -1,5 +1,4 @@
 import { CodeEventDuo } from "../utilities/code-event"
-import { RingBuffer } from "../utilities/ring-buffer"
 
 export const enum TransitionDirection {
 	NONE = 0,
@@ -37,8 +36,14 @@ export class State {
 		this.is_init = true
 	}
 
-	enter(context: ISwitchStateContext, on_complete: () => void) { on_complete() }
-	exit(context: ISwitchStateContext, on_complete: () => void) { on_complete() }
+	enter(context: ISwitchStateContext, on_complete: () => void) {
+		context; // Never used hack
+		on_complete()
+	}
+	exit(context: ISwitchStateContext, on_complete: () => void) {
+		context; // Never used hack
+		on_complete()
+	}
 	reset() { }
 }
 
@@ -46,14 +51,14 @@ export class Statemachine {
 	states: State[]
 	current_idx: number
 	is_switching_state: boolean
-	history: RingBuffer
+	// history: RingBuffer
 	is_init: boolean
 	on_state_changed: CodeEventDuo<State, State>
 	constructor(states: State[]) {
 		this.states = states
 		this.current_idx = -1
 		this.is_switching_state = false
-		this.history = new RingBuffer(10)
+		// this.history = new RingBuffer(10)
 		this.is_init = false
 		this.on_state_changed = new CodeEventDuo<State, State>()
 	}
@@ -142,7 +147,7 @@ export class Statemachine {
 			const on_exit_complete = () => {
 				if (debug) console.log('Exited state ', this.current_idx, ' and now entering state ', idx)
 				this.is_switching_state = false
-				this.history.push(this.current_idx)
+				// this.history.push(this.current_idx)
 				this.current_idx = idx
 				entering_state.enter(context, on_enter_complete)
 				this.on_state_changed.fire(exiting_state, entering_state)

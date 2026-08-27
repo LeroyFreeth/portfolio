@@ -1,4 +1,4 @@
-import { EASE_TYPE, ease } from "../timeline/easings"
+import { EASE_TYPE, ease } from "../math/easings"
 
 export type AnimationClip<T> = {
 	start: T

@@ -6,8 +6,8 @@ import { ColorPaletteUtils } from './colors/color-palette'
 import { PortfolioDataManager } from './portfolio/portfolio-data-manager'
 import { about_data, portfolio_data_arr, type PortfolioData } from './portfolio/portfolio-data'
 
-import { Animator, OutOfBounds, type AnimationClip } from './timeline_data/animator'
-import { EASE_TYPE } from './timeline/easings'
+import { Animator, OutOfBounds, type AnimationClip } from './animator/animator'
+import { EASE_TYPE } from './math/easings'
 
 enum CssClasses {
 	HIDE = 'hide',
@@ -62,12 +62,12 @@ const color_id_arr = [
 	'--color-e',
 ]
 const dynamic_colors = [
-	document.getElementsByClassName('dynamic-color-a'),
-	document.getElementsByClassName('dynamic-color-b'),
-	document.getElementsByClassName('dynamic-color-c'),
-	document.getElementsByClassName('dynamic-color-d'),
-	document.getElementsByClassName('dynamic-color-e'),
-]
+	document.getElementsByClassName('dynamic-color-a')as HTMLCollectionOf<HTMLElement>,
+	document.getElementsByClassName('dynamic-color-b')as HTMLCollectionOf<HTMLElement>,
+	document.getElementsByClassName('dynamic-color-c')as HTMLCollectionOf<HTMLElement>,
+	document.getElementsByClassName('dynamic-color-d')as HTMLCollectionOf<HTMLElement>,
+	document.getElementsByClassName('dynamic-color-e')as HTMLCollectionOf<HTMLElement>,
+] as HTMLCollectionOf<HTMLElement>[]
 
 const element_arr = [container, canvas, focus, help, projects_btn, video_aspect_ratio, i_frame_element, preview_img, links_container, tags_container, drag_icon]
 for (const el of element_arr) {
@@ -195,6 +195,7 @@ const lerp_clip_idx = animator.get_idx(animator.get_dummy())
 // One central place to solve different bindings required for the state change
 // I do not want the states to know about their shared objects to avoid conflicts, but also not scatter all the listeners
 function state_changed(old_state: State, new_state: State) {
+	old_state; // Never used hack
 	switch (new_state) {
 		case state_grid:
 			help.classList.add(CssClasses.HIDE)

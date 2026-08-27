@@ -88,6 +88,7 @@ export class RotatorGridIllusion {
 	}
 
 	update(facing_direction_arr: boolean[], x: number, y: number) {
+		x; // Hack
 		const l = facing_direction_arr.length
 		for (let i = 0; i < l; ++i) {
 			if (facing_direction_arr[i]) continue

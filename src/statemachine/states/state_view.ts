@@ -1,6 +1,4 @@
 import { Environment3d } from "../../environment_3d";
-import { EventBundler } from "../../utilities/event-bundler";
-import { Pointers } from "../../utilities/pointers";
 import { State, type ISwitchStateContext } from "../statemachine";
 
 export class StateView extends State {

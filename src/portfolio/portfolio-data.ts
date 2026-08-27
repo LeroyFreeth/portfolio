@@ -1,5 +1,3 @@
-import { ColorPaletteManager } from '../utilities/color-palette-manager'
-
 import loot_vr_a from '/images/loot-vr/loot-vr-a.webp'
 import loot_vr_b from '/images/loot-vr/loot-vr-b.webp'
 import loot_vr_c from '/images/loot-vr/loot-vr-c.webp'
@@ -36,6 +34,7 @@ import number_3 from '/images/numbers/3.webp'
 import number_4 from '/images/numbers/4.webp'
 import number_5 from '/images/numbers/5.webp'
 import number_6 from '/images/numbers/6.webp'
+import { ColorConversion } from '../colors/converters'
 
 type PortfolioData = {
 	name: string
@@ -165,7 +164,7 @@ const portfolio_data_arr: PortfolioData[] = [
 		image_url_arr: [m_n_m_s_a, m_n_m_s_b, m_n_m_s_c],
 		title: 'M&M Color Match',
 		pages: ['Local multiplayer pop the bubbles game! Running live in M&M stores.',
-			'This was a fun, mostly solo, project.'],
+			'Includes leaderboards and the likes.'],
 		links: [],
 		video: {
 			preview_image: '',
@@ -173,12 +172,13 @@ const portfolio_data_arr: PortfolioData[] = [
 		},
 		roles: ['developer'],
 		tags: ['unity', 'local-multiplayer'],
+		// TODO: Could bake these
 		color_palette: [
-			ColorPaletteManager.desaturate(0xD80C0A, 0.3),
-			ColorPaletteManager.desaturate(0x1578E1, 0.3),
-			ColorPaletteManager.desaturate(0xEEDFD2, 0.3),
-			ColorPaletteManager.desaturate(0x33B55F, 0.3),
-			ColorPaletteManager.desaturate(0x8CCCFB, 0.3)],
+			ColorConversion.hex_desaturate(0xD80C0A, 0.3),
+			ColorConversion.hex_desaturate(0x1578E1, 0.3),
+			ColorConversion.hex_desaturate(0xEEDFD2, 0.3),
+			ColorConversion.hex_desaturate(0x33B55F, 0.3),
+			ColorConversion.hex_desaturate(0x8CCCFB, 0.3)],
 		span_x: 1,
 		span_y: 1,
 	},
@@ -226,7 +226,7 @@ const portfolio_data_arr: PortfolioData[] = [
 		name: 'hornn-stein',
 		image_url_arr: [hornsteinn_a, hornsteinn_b],
 		title: 'Hornnstein',
-		pages: ['Web-application in which users virtually enhance their driveways to preview purchasable products.'],
+		pages: ['Virtual driveway preview', 'Web-application in which users virtually enhance their driveways to preview purchasable products.'],
 		links: [{
 			url: 'https://teikniforrit.bmvalla.is',
 			text: '> Try it live <'
@@ -246,7 +246,7 @@ const portfolio_data_arr: PortfolioData[] = [
 		name: 'gary-james-mcqueen',
 		image_url_arr: [gary_james_mcqueen_a, gary_james_mcqueen_b, gary_james_mcqueen_c, gary_james_mcqueen_d],
 		title: 'Gary James Mcqueen',
-		pages: ['Digital fashion show created in Unreal4.', `I was a developer on this project for Unreal4. This included importing assets, creating shaders to suit the creative needs, etc. In addition, I was the sole 'virtual cameraman'.`],
+		pages: ['Digital fashion show created in Unreal4.', `Developped in Unreal 4 using mocap, alembics and lots of sequences and shader adjustments to suit the creative needs. In addition, I was the sole 'virtual cameraman'.`],
 		links: [],
 		video: {
 			preview_image: 'https://img.youtube.com/vi/_7y0qbs71Ec/sddefault.jpg',

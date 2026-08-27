@@ -1,7 +1,7 @@
 import { State, type ISwitchStateContext } from "../statemachine"
 import { CodeEventDuo } from "../../utilities/code-event"
-import { EventBundler } from "../../utilities/event-bundler"
 import type { RectCache } from "../../utilities/rect-cache"
+import { EventBundler } from "../../utilities/event-bundler"
 
 export type GridData = {
 	img_url: string
@@ -165,15 +165,6 @@ export class StateGridMenu extends State {
 		this.cach_bounding_rects()
 		this.set_idx(this.idx, true)
 		return
-		// Potentially need to fix this if the dom height increases
-		const height = document.documentElement.scrollHeight - window.innerHeight
-		const scroll = window.scrollY
-		const n = Math.max(0, Math.min(1, scroll / height))
-		const l = this.items.length
-		const idx = Math.ceil(n * l) % l
-		if (this.hovering_item && idx !== 0) {
-		} else {
-		}
 	}
 	_click_item = () => {
 		this.statemachine?.switch_state_for_delta_idx(1)
@@ -211,20 +202,8 @@ export class StateGridMenu extends State {
 		this.image_cache = []
 		this.event_bundler.set_enabled(false)
 
-		const rect = this.items[this.idx].getBoundingClientRect()
 		for (let i = 1; i < this.items.length; i++) {
-			const item = this.items[i]
-			item.classList.add("o-grid__remove")
-			if (i === this.idx) {
-			} else {
-				const other_rect = item.getBoundingClientRect()
-				const scale = 5
-				const target_pos = {
-					x: (other_rect.x - rect.x) * scale,
-					y: (other_rect.y - rect.y) * scale,
-				}
-				// item.style.transform = `translate(${target_pos.x}px, ${target_pos.y}px)`
-			}
+			this.items[i].classList.add("o-grid__remove")
 		}
 		this.grid.style.overflow = "hidden"
 		this.grid.classList.add("o-grid__collapse")
