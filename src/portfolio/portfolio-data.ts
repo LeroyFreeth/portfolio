@@ -112,8 +112,7 @@ const portfolio_data_arr: PortfolioData[] = [
 		name: 'lootvr',
 		image_url_arr: [loot_vr_a, loot_vr_b, loot_vr_c, loot_vr_d, loot_vr_e],
 		title: 'Loot VR',
-		pages: ['VR Project for the Mauritshuis.', 'Three artifacts within the exposition got a VR experience which transports the user back in time to a important scenario in the artifacts lifecycle.',
-			`I was the main developer on this project. This included implementing the scenes, animations. In addition, we needed to create an anchor system to make the 'VR' behave like 'AR', keeping its world position relative to the room/lighthouses. Each scene had its own set of challenges, such as instancing a crowd, volumetric lighting performance issues within VR or lining up the VR walk path without physical risks at the musuem for players and priceless artifacts.`],
+		pages: ['VR Project for the Mauritshuis.', `Three artifacts within the exposition got a VR experience which transports the user back in time to a important scenario in the artifacts lifecycle.</br></br>The experience relies on a VR anchor system: A system to make the 'VR' behave like 'AR', keeping the entire VR world position relative to the room/lighthouses.</br></br>Each scene had its own set of challenges usually tied to VR and performance, such as rendering a crowd of 15.000 NPCs, volumetric lighting or lining up the VR walk path without physical risks at the musuem for players and priceless artifacts.`],
 		links: [{
 			url: 'https://www.mauritshuis.nl/en/press/presskit-loot-10-stories',
 			text: '> Mauritshuis presskit <'
@@ -132,7 +131,7 @@ const portfolio_data_arr: PortfolioData[] = [
 		name: 'moyosa-spaces',
 		image_url_arr: [moyosa_spaces_a, moyosa_spaces_b, moyosa_spaces_c, moyosa_spaces_d],
 		title: 'Moyosa spaces',
-		pages: ['Virtual environments on the web, such as museums.', 'They consist of tiled high resolution cubemaps which load higher resolution tiles based on zoom levels. Users can navigate through the gallery using predefined waypoints. Some galleries were created with <a href="https://krpano.com/home/">Krpano</a>. Newer galleries were created with <a href="https://www.babylonjs.com">BabylonJs</a> and <a href="https://lastolivegames.github.io/becsy/guide/introduction">Becsy</a>',
+		pages: ['Virtual environments on the web, such as museums.', 'At least 15 spaces were shipped during my time at Moyosa Media.</br></br>Moyosa Spaces are virtual rooms which consists of pre-renderer high resolution tiled cubemaps, which load higher resolution tiles based on zoom levels. Users can navigate through the gallery using predefined waypoints. Some galleries were created with <a href="https://krpano.com/home/">Krpano</a>. Newer galleries were created with <a href="https://www.babylonjs.com">BabylonJs</a> and <a href="https://lastolivegames.github.io/becsy/guide/introduction">Becsy</a>',
 			'In addition to the galleries themselves, my role was to automate the gallery pipeline. Galleries were initially setup in Unreal. Therefore tools were created to export as much as possible from the Unreal scene to the web version. This includes waypoint positions, default interactions and tile paths.<br><br>I also sometimes made some promo material, such as the video below.'],
 		links: [{
 			url: 'https://argento-gallery.nl',
@@ -186,13 +185,13 @@ const portfolio_data_arr: PortfolioData[] = [
 		name: '8th-wall-ar',
 		image_url_arr: [adidas_a, adidas_b, adidas_c],
 		title: '8th wall AR projects',
-		pages: ['AR experiences, including the Soccer World Championship 2024 Giants campaign.', 'Users use AR on their phones to the see their legends come to life! Additionaly toblerone AR tiny messages web application and I have alsohelped making marketing applications for Sony as shown in the video blow.'],
+		pages: ['AR web experiences', 'AR web applications, such as:</br></br>  - The Soccer World Championship 2024 Giants campaign in which users could see some of their favorite players in their room or projected as giants on giant skyscrapers.</br></br>  - Sony earbuds which utilized dimentional portals and similar effects. The project also contained a native android application used for the unboxing experience of influencers.</br></br>  - Toblerone Tiny Messages in which you could send a small, animated AR message to your friends and family.'],
 		links: [{
 			url: 'https://www.8thwall.com/moyosamedia/adidas-giants',
 			text: '> Link to 8thwall <'
 		}],
 		video: {
-			preview_image: adidas_a,
+			preview_image: 'https://img.youtube.com/vi/HrNJ-eWNN70/0.jpg',
 			url: 'https://www.youtube.com/embed/HrNJ-eWNN70?autoplay=1&mute=1',
 		},
 		roles: ['developer'],
@@ -202,6 +201,7 @@ const portfolio_data_arr: PortfolioData[] = [
 		span_x: 1,
 		span_y: 2,
 	},
+
 	{
 		name: 'brighter-future',
 		image_url_arr: [brighter_future_a, brighter_future_b],
