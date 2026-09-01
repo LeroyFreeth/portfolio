@@ -288,7 +288,7 @@ const portfolio_data_arr: PortfolioData[] = [
 			url: 'https://www.youtube.com/embed/MGgK1eajwG0?autoplay=1&mute=1',
 		},
 		roles: ['developer', 'digital cinematographer'],
-		tags: ['Unreal4', 'cinematography', 'alembic files', 'motion-capture'],
+		tags: ['Typescript', 'Javascript', 'BabylonJs', 'ThreeJs'],
 		color_palette: [0x683643, 0x249EA4, 0x253947, 0x202136, 0x7FD0E2],
 
 		span_x: 1,
