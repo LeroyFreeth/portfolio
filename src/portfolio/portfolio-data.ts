@@ -82,7 +82,7 @@ const about_data: PortfolioData = {
 					</g>
 				</svg>
 
-You can drag the cube to rotate it. Rotate it up and down to - Or go to the projects page in the side bar - to switch between projects. Rotate left and right to see some more pictures from that portfolio piece.
+You can drag the cube to rotate it. Rotate it up and down to - Or go to the projects page in the side bar - to switch between projects. Rotate left and right to see some more pictures from that portfolio piece.</br></br>You also have some tools to view the images. You can pinch/scroll to zoom and use a double finger swipe or middle mouse button to pan. Double click to reset the images.
 `],
 	links: [],
 	video: { preview_image: '', url: '' },
