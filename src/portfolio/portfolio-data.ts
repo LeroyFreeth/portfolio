@@ -112,7 +112,7 @@ const portfolio_data_arr: PortfolioData[] = [
 		name: 'lootvr',
 		image_url_arr: [loot_vr_a, loot_vr_b, loot_vr_c, loot_vr_d, loot_vr_e],
 		title: 'Loot VR',
-		pages: ['VR Project for the Mauritshuis.', `Three artifacts within the exposition got a VR experience which transports the user back in time to a important scenario in the artifacts lifecycle.</br></br>The experience relies on a VR anchor system: A system to make the 'VR' behave like 'AR', keeping the entire VR world position relative to the room/lighthouses.</br></br>Each scene had its own set of challenges usually tied to VR and performance, such as rendering a crowd of 15.000 NPCs, volumetric lighting or lining up the VR walk path without physical risks at the musuem for players and priceless artifacts.`],
+		pages: ['VR Project for the Mauritshuis.', `Three artifacts within the exposition got a VR experience which transports the user back in time to a important scenario in the artifacts lifecycle.</br></br>The experience relies on a VR anchor system: A system to make the 'VR' behave like 'AR', keeping the entire VR world position relative to the room/lighthouses.</br></br>Each scene had its own set of challenges usually tied to VR and performance, such as rendering a crowd of 15.000 NPCs, volumetric lighting or lining up the VR walk path without physical risks at the museum for players and priceless artifacts.`],
 		links: [{
 			url: 'https://www.mauritshuis.nl/en/press/presskit-loot-10-stories',
 			text: '> Mauritshuis presskit <'
