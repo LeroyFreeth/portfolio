@@ -12,13 +12,12 @@ import { EASE_TYPE } from './math/easings'
 enum CssClasses {
 	HIDE = 'hide',
 	ORDER = 'order',
-
 }
 
+// Start with the help active to onboard new users
 let help_active = true
-
-// Do not set to 0, it is a nill entry
 let start_portfolio_idx = 0
+// Or adjust according to the hash used for sharing to set the matching portfolio entry
 for (let i = 0; i < portfolio_data_arr.length; i++) {
 	const data_id = window.location.hash.replace('#', '')
 	const data = portfolio_data_arr[i]
@@ -62,18 +61,20 @@ const color_id_arr = [
 	'--color-e',
 ]
 const dynamic_colors = [
-	document.getElementsByClassName('dynamic-color-a')as HTMLCollectionOf<HTMLElement>,
-	document.getElementsByClassName('dynamic-color-b')as HTMLCollectionOf<HTMLElement>,
-	document.getElementsByClassName('dynamic-color-c')as HTMLCollectionOf<HTMLElement>,
-	document.getElementsByClassName('dynamic-color-d')as HTMLCollectionOf<HTMLElement>,
-	document.getElementsByClassName('dynamic-color-e')as HTMLCollectionOf<HTMLElement>,
+	document.getElementsByClassName('dynamic-color-a') as HTMLCollectionOf<HTMLElement>,
+	document.getElementsByClassName('dynamic-color-b') as HTMLCollectionOf<HTMLElement>,
+	document.getElementsByClassName('dynamic-color-c') as HTMLCollectionOf<HTMLElement>,
+	document.getElementsByClassName('dynamic-color-d') as HTMLCollectionOf<HTMLElement>,
+	document.getElementsByClassName('dynamic-color-e') as HTMLCollectionOf<HTMLElement>,
 ] as HTMLCollectionOf<HTMLElement>[]
 
+// Quick, dirty check
 const element_arr = [container, canvas, focus, help, projects_btn, video_aspect_ratio, i_frame_element, preview_img, links_container, tags_container, drag_icon]
 for (const el of element_arr) {
 	if (!el) console.error('Missing an element')
 }
 
+// Setup links and tags DOM Elements
 let max_links = 0
 let max_tags = 0
 for (const portfolio_data of portfolio_data_arr) {
@@ -139,13 +140,16 @@ const states: State[] = [
 	state_grid,
 	state_view,
 ]
-
 const statemachine = new Statemachine(states)
 
 
 /* -----------------------------------------------------------------------------
 	§§ 4. ANIMATIONS 
 ----------------------------------------------------------------------------- */
+
+const clip_color = { start: 0, end: 1, duration_ms: 1000, ease: EASE_TYPE.LINEAR } as AnimationClip<number>
+const lerp_color = (start: number, end: number, t: number) => { return start + (end - start) * t }
+
 
 // Setup the animator
 const clip_sentence = { start: 'Hello, ', end: 'world!', duration_ms: 1500, ease: EASE_TYPE.IN_OUT_QUAD } as AnimationClip<string>
@@ -183,10 +187,11 @@ const lerp_cursor = (start: string, end: string, t: number): string => {
 }
 
 const animator = new Animator()
+animator.add(clip_color, lerp_color, OutOfBounds.HOLD)
 animator.add(clip_sentence, lerp_sentence, OutOfBounds.HOLD)
 animator.add(clip_cursor, lerp_cursor, OutOfBounds.LOOP)
 const text_clip_idx = animator.get_idx(clip_sentence)
-const lerp_clip_idx = animator.get_idx(animator.get_dummy())
+const lerp_clip_idx = animator.get_idx(clip_color)
 
 /* -----------------------------------------------------------------------------
 	§§ 5. EVENTS/CALLBACKS/BINDINGS 
@@ -405,6 +410,3 @@ else {
 update_box_textures(true)
 
 tick()
-
-
-

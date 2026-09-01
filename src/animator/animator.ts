@@ -14,6 +14,13 @@ export enum OutOfBounds {
 	BOUNCE = 3,
 }
 
+const nill_clip: AnimationClip<number> = { start: 0, end: 0, duration_ms: 0, ease: EASE_TYPE.LINEAR } as AnimationClip<number>
+const nill_lerp = (start: number, end: number, t: number) => {
+	end; t;
+	return start
+}
+const nill_post = OutOfBounds.HOLD
+
 // Can fetch the value
 // However, since you provide the lerp function, you can immediately write the lerp result to the target object
 export class Animator {
@@ -33,12 +40,7 @@ export class Animator {
 		this.speeds = []
 		this.posts = []
 
-		this.add<number>(
-			{ start: 0, end: 1, duration_ms: 1000, ease: EASE_TYPE.LINEAR } as AnimationClip<number>,
-			(start: number, end: number, t: number) => { return start + (end - start) * t },
-			OutOfBounds.HOLD
-		)
-		// this.playings[0] = false
+		this.add<number>(nill_clip, nill_lerp, nill_post)
 	}
 
 	add<T>(clip: AnimationClip<T>, lerp: ((a: T, b: T, t: number) => T), post: OutOfBounds) {
@@ -73,9 +75,6 @@ export class Animator {
 	set_speed_for_idx(idx: number, speed: number) { this.speeds[idx] = speed }
 	get_value_for_idx(idx: number) { return this.values[idx] }
 
-
-
-	get_dummy() { return this.clips[0] }
 	play(clip: AnimationClip<any>) { this.playings[this.get_idx(clip)] = true }
 	play_from_start(clip: AnimationClip<any>) {
 		const idx = this.get_idx(clip)
@@ -93,7 +92,7 @@ export class Animator {
 	get_value(clip: AnimationClip<any>): any { return this.values[this.get_idx(clip)] }
 
 	tick(delta_ms: number) {
-		for (let i = 0; i < this.playings.length; ++i) {
+		for (let i = 1; i < this.playings.length; ++i) {
 			if (!this.playings[i]) continue
 
 			const clip = this.clips[i]
@@ -108,7 +107,7 @@ export class Animator {
 					break
 				case OutOfBounds.RESET:
 					clip_time = Math.max(0, n - Math.floor(n))
-					this.times[i] = 0 
+					this.times[i] = 0
 					break
 				case OutOfBounds.LOOP:
 					clip_time = n % 1.0
