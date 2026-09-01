@@ -232,8 +232,8 @@ const portfolio_data_arr: PortfolioData[] = [
 			text: '> Try it live <'
 		}],
 		video: {
-			preview_image: '',
-			url: '',
+			preview_image: 'https://img.youtube.com/vi/e2j4cSlgAQw/sddefault.jpg',
+			url: 'https://www.youtube.com/embed/e2j4cSlgAQw?autoplay=1&mute=1',
 		},
 		roles: ['developer'],
 		tags: ['vue', 'web'],
@@ -259,9 +259,42 @@ const portfolio_data_arr: PortfolioData[] = [
 		span_x: 1,
 		span_y: 1,
 	},
+	{
+		name: 'virtual-web-experiences',
+		image_url_arr: [
+			'https://img.youtube.com/vi/kvYqzXtXyZM/sddefault.jpg',
+			'https://img.youtube.com/vi/MGgK1eajwG0/sddefault.jpg',
+			'https://img.youtube.com/vi/c9XTAECALEM/sddefault.jpg',
+			'https://img.youtube.com/vi/NODhd16X4ck/sddefault.jpg',
+		],
+		title: 'Virtual Web Spaces',
+		pages: ['Custom build digital web spaces', `Each website served as a visual hub which allowed users to explore a brand, vision or even dark moments in our history.`],
+		links: [
+			{
+				url: 'https://www.youtube.com/watch?v=kvYqzXtXyZM',
+				text: '> Johnnie Walker - Future cities (Youtube) <',
+			},
+			{
+				url: 'https://www.youtube.com/watch?v=c9XTAECALEM',
+				text: '> Westerbork Moreel Doolhof (Youtube) <',
+			},
+			{
+				url: 'https://www.youtube.com/watch?v=NODhd16X4ck',
+				text: '> Rembrandt Huis (Youtube) <',
+			},
+		],
+		video: {
+			preview_image: 'https://img.youtube.com/vi/MGgK1eajwG0/sddefault.jpg',
+			url: 'https://www.youtube.com/embed/MGgK1eajwG0?autoplay=1&mute=1',
+		},
+		roles: ['developer', 'digital cinematographer'],
+		tags: ['Unreal4', 'cinematography', 'alembic files', 'motion-capture'],
+		color_palette: [0x683643, 0x249EA4, 0x253947, 0x202136, 0x7FD0E2],
 
+		span_x: 1,
+		span_y: 1,
+	},
 ]
-
 
 if (portfolio_debug) {
 	const debug_portfolio_data: PortfolioData = {
@@ -288,3 +321,5 @@ if (portfolio_debug) {
 
 export { about_data, portfolio_data_arr }
 export type { PortfolioData }
+
+
