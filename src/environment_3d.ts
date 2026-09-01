@@ -251,8 +251,8 @@ export class Environment3d {
 		// Panning
 		if (second_pointer.state) {
 			delta_position.set(
-				(second_pointer.cur_pos.x - second_pointer.prev_pos.x) / (canvas_rect.width * panning_padding),
-				(second_pointer.cur_pos.y - second_pointer.prev_pos.y) / (canvas_rect.width * panning_padding)
+				(second_pointer.cur_pos.x - second_pointer.prev_pos.x) / (canvas_rect.width * panning_padding * 0.5),
+				(second_pointer.cur_pos.y - second_pointer.prev_pos.y) / (canvas_rect.width * panning_padding * 0.5)
 			)
 			// if ((environment_flags & EnvironmentFlags.ALLOW_PANNING) > 0) {
 			target_panning.set(panning.x - (delta_position.x * zoom), panning.y + (delta_position.y * zoom))
